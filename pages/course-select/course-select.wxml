@@ -1,35 +1,59 @@
 <view class="container">
   <!-- 头部 -->
-  <view class="header">
-    <text class="title">课程选择</text>
-    <text class="subtitle">选择或创建课程</text>
+  <view class="header fade-in">
+    <view class="header-content">
+      <text class="title">课程选择</text>
+      <text class="subtitle">管理您的学习计划与课程安排</text>
+    </view>
+    <!-- 装饰性元素（可选，如不需要可删） -->
+    <view class="header-decoration"></view>
   </view>
 
   <!-- 当前选中的课程 -->
-  <view wx:if="{{selectedCourse}}" class="selected-course">
-    <text class="selected-label">当前课程：</text>
-    <text class="selected-name">{{selectedCourse.name}}</text>
-    <text wx:if="{{selectedCourse.description}}" class="selected-desc">{{selectedCourse.description}}</text>
+  <view wx:if="{{selectedCourse}}" class="current-card slide-up" style="animation-delay: 0.1s;">
+    <view class="card-header">
+      <text class="tag">正在进行</text>
+      <view class="status-dot"></view>
+    </view>
+    <text class="current-name">{{selectedCourse.name}}</text>
+    <text wx:if="{{selectedCourse.description}}" class="current-desc">{{selectedCourse.description}}</text>
   </view>
 
   <!-- 课程列表 -->
-  <view class="course-list">
-    <text class="section-title">课程列表</text>
-    <view wx:if="{{courses.length === 0}}" class="empty-list">
-      <text>暂无课程</text>
+  <view class="section slide-up" style="animation-delay: 0.2s;">
+    <view class="section-header">
+      <text class="section-title">课程列表</text>
+      <text class="section-count" wx:if="{{courses.length > 0}}">{{courses.length}}门</text>
     </view>
-    <view wx:else class="list-container">
-      <view wx:for="{{courses}}" wx:key="id" class="course-item {{selectedCourse && selectedCourse.id === item.id ? 'selected' : ''}}" data-course-id="{{item.id}}" bindtap="selectCourse">
-        <view class="course-info">
+
+    <view wx:if="{{courses.length === 0}}" class="empty-state">
+      <view class="empty-icon"></view>
+      <text>暂无课程，请在下方创建</text>
+    </view>
+
+    <view wx:else class="course-list">
+      <view 
+        wx:for="{{courses}}" 
+        wx:key="id" 
+        class="course-card {{selectedCourse && selectedCourse.id === item.id ? 'is-active' : ''}}"
+        data-course-id="{{item.id}}" 
+        bindtap="selectCourse"
+        hover-class="card-hover"
+        hover-stay-time="150"
+      >
+        <view class="course-main">
           <text class="course-name">{{item.name}}</text>
           <text wx:if="{{item.description}}" class="course-desc">{{item.description}}</text>
         </view>
+        
         <view class="course-actions">
-          <view class="select-btn">
-            <text>{{selectedCourse && selectedCourse.id === item.id ? '已选择' : '选择'}}</text>
+          <!-- 选中状态指示器 -->
+          <view class="check-indicator" wx:if="{{selectedCourse && selectedCourse.id === item.id}}">
+            <text class="check-icon">✓</text> 已选
           </view>
-          <view class="delete-btn" data-course-id="{{item.id}}" catchtap="deleteCourse">
-            <text>删除</text>
+          <!-- 删除按钮 -->
+          <view class="btn-icon-delete" data-course-id="{{item.id}}" catchtap="deleteCourse" hover-class="icon-hover">
+            <text class="cross-icon">×</text>
           </view>
         </view>
       </view>
@@ -37,35 +61,42 @@
   </view>
 
   <!-- 创建新课程 -->
-  <view class="create-section">
-    <text class="section-title">创建新课程</text>
-    <view class="form">
-      <input
-        class="input-field"
-        placeholder="课程名称"
-        value="{{newCourseName}}"
-        bindinput="onCourseNameInput"
-      />
-      <textarea
-        class="textarea-field"
-        placeholder="课程描述（可选）"
-        value="{{newCourseDescription}}"
-        bindinput="onCourseDescriptionInput"
-      />
+  <view class="section slide-up" style="animation-delay: 0.3s;">
+    <text class="section-title">新建课程</text>
+    <view class="form-card">
+      <view class="input-group">
+        <input
+          class="modern-input"
+          placeholder="输入课程名称"
+          placeholder-class="input-placeholder"
+          value="{{newCourseName}}"
+          bindinput="onCourseNameInput"
+        />
+      </view>
+      <view class="input-group">
+        <textarea
+          class="modern-textarea"
+          placeholder="添加描述（可选）"
+          placeholder-class="input-placeholder"
+          value="{{newCourseDescription}}"
+          bindinput="onCourseDescriptionInput"
+          disable-default-padding="{{true}}"
+        />
+      </view>
       <button
-        class="btn-create {{creating || isDisabled ? 'disabled' : ''}}"
+        class="btn-primary {{creating || isDisabled ? 'disabled' : ''}}"
         bindtap="createCourse"
         disabled="{{isDisabled || creating}}"
-        loading="{{creating}}"
         hover-class="btn-hover"
       >
-        {{creating ? '创建中...' : '创建课程'}}
+        {{creating ? '处理中...' : '创建新课程'}}
+        <view class="btn-shine"></view>
       </button>
     </view>
   </view>
 
-  <!-- 反馈信息 -->
-  <view wx:if="{{message}}" class="feedback-box">
+  <!-- 反馈信息 Toast -->
+  <view wx:if="{{message}}" class="toast-message fade-in">
     <text>{{message}}</text>
   </view>
 </view>

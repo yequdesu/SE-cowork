@@ -1,156 +1,173 @@
 <view class="container">
   
-  <!-- 【核心修复】引入 WXS 脚本用于判断数组包含逻辑 -->
+  <!-- 引入 WXS 工具 -->
   <wxs module="tools">
     module.exports.includes = function(arr, item) {
-      // WXS 中不支持 ES6 的 .includes，必须使用 .indexOf
       return arr.indexOf(item) > -1;
     }
   </wxs>
 
-  <!-- 顶部大标题与主操作 -->
-  <view class="header-section">
-    <view class="title-group">
-      <text class="page-title">学生管理</text>
-      <text class="page-subtitle">共 {{students.length}} 位学生</text>
+  <!-- 顶部 Header -->
+  <view class="header fade-in">
+    <view class="header-left">
+      <text class="title">学生名册</text>
+      <text class="subtitle">共 {{students.length}} 位成员在档</text>
     </view>
     
-    <!-- 按钮组 -->
-    <view class="header-actions">
-      <!-- 多选模式切换按钮 (次要) -->
-      <view class="btn-secondary-capsule" bindtap="toggleMultiSelectMode" hover-class="btn-hover-light">
-        <text>{{isMultiSelectMode ? '取消' : '多选'}}</text>
+    <!-- 顶部操作区 -->
+    <view class="header-right">
+      <!-- 切换多选模式 -->
+      <view 
+        class="btn-mode {{isMultiSelectMode ? 'active' : ''}}" 
+        bindtap="toggleMultiSelectMode"
+        hover-class="btn-hover"
+      >
+        <text>{{isMultiSelectMode ? '完成' : '管理'}}</text>
       </view>
-      
-      <!-- 添加按钮 (主要) - 仅在非多选模式下显示 -->
-      <view class="btn-primary-capsule" bindtap="showAddModal" hover-class="btn-hover" wx:if="{{!isMultiSelectMode}}">
-        <text class="icon-plus">+</text> 添加
+
+      <!-- 添加按钮 (仅在普通模式显示) -->
+      <view 
+        wx:if="{{!isMultiSelectMode}}" 
+        class="btn-add" 
+        bindtap="showAddModal"
+        hover-class="btn-hover"
+      >
+        <text class="icon-plus">+</text> 新增
       </view>
     </view>
   </view>
 
-  <!-- 多选模式专用工具栏 (动画显隐) -->
-  <view class="toolbar-wrapper {{isMultiSelectMode ? 'show' : ''}}">
-    <view class="toolbar">
-      <view class="checkbox-row" bindtap="toggleSelectAll">
-        <view class="circle-checkbox {{selectAll ? 'checked' : ''}}">
-          <text wx:if="{{selectAll}}" class="check-mark">✓</text>
+  <!-- 批量操作工具栏 (动画显隐) -->
+  <view class="batch-toolbar {{isMultiSelectMode ? 'show' : ''}}">
+    <view class="toolbar-content">
+      <view class="check-all-group" bindtap="toggleSelectAll">
+        <view class="custom-checkbox {{selectAll ? 'checked' : ''}}">
+          <text class="check-icon">✓</text>
         </view>
-        <text class="toolbar-text">全选</text>
+        <text>全选</text>
       </view>
       
       <button 
-        class="btn-batch-delete {{selectedStudents.length > 0 ? 'active' : ''}}" 
+        class="btn-batch-delete {{selectedStudents.length > 0 ? '' : 'disabled'}}" 
         bindtap="batchDelete" 
         disabled="{{selectedStudents.length === 0}}"
+        hover-class="btn-danger-hover"
       >
-        删除 ({{selectedStudents.length}})
+        删除选中 ({{selectedStudents.length}})
       </button>
     </view>
   </view>
 
   <!-- 学生列表 -->
   <scroll-view scroll-y class="list-container" wx:if="{{students.length > 0}}">
-    <view
-      wx:for="{{students}}"
-      wx:key="student_id"
-      class="student-card {{isMultiSelectMode ? 'multi-mode' : ''}} {{tools.includes(selectedStudents, item.student_id) ? 'card-selected' : ''}}"
-      bindtap="{{isMultiSelectMode ? 'toggleStudentSelection' : ''}}" 
-      data-id="{{item.student_id}}"
-    >
-      <!-- 左侧复选框 (仅多选模式显示) -->
-      <view class="selection-area" wx:if="{{isMultiSelectMode}}">
-        <!-- 【核心修复】使用 tools.includes 判断选中状态 -->
-        <view class="circle-checkbox {{tools.includes(selectedStudents, item.student_id) ? 'checked' : ''}}">
-          <text wx:if="{{tools.includes(selectedStudents, item.student_id)}}" class="check-mark">✓</text>
+    <view class="list-wrapper slide-up" style="animation-delay: 0.1s;">
+      
+      <view
+        wx:for="{{students}}"
+        wx:key="student_id"
+        class="student-card {{isMultiSelectMode ? 'mode-select' : ''}} {{tools.includes(selectedStudents, item.student_id) ? 'is-selected' : ''}}"
+        bindtap="{{isMultiSelectMode ? 'toggleStudentSelection' : ''}}" 
+        data-id="{{item.student_id}}"
+        hover-class="card-hover"
+        hover-stay-time="100"
+      >
+        <!-- 1. 多选框区域 -->
+        <view class="checkbox-wrapper" wx:if="{{isMultiSelectMode}}">
+          <view class="custom-checkbox {{tools.includes(selectedStudents, item.student_id) ? 'checked' : ''}}">
+            <text class="check-icon">✓</text>
+          </view>
         </view>
+
+        <!-- 2. 头像区域 -->
+        <view class="avatar-box">
+          <text>{{item.name[0]}}</text>
+        </view>
+
+        <!-- 3. 信息区域 -->
+        <view class="info-box">
+          <view class="info-top">
+            <text class="name">{{item.name}}</text>
+            <view class="tag-major">{{item.major}}</view>
+          </view>
+          <text class="id-text">ID: {{item.student_id}}</text>
+        </view>
+
+        <!-- 4. 单个操作区域 (仅普通模式) -->
+        <view class="actions-box" wx:if="{{!isMultiSelectMode}}">
+          <view class="btn-icon edit" catchtap="editStudent" data-student="{{item}}" hover-class="icon-hover">
+            <text>✎</text>
+          </view>
+          <view class="btn-icon delete" catchtap="deleteStudent" data-id="{{item.student_id}}" hover-class="icon-hover">
+            <text>×</text>
+          </view>
+        </view>
+
       </view>
 
-      <!-- 头像 -->
-      <view class="avatar-placeholder">
-        {{item.name[0]}}
-      </view>
-
-      <!-- 信息 -->
-      <view class="card-info">
-        <view class="name-row">
-          <text class="student-name">{{item.name}}</text>
-          <text class="student-major">{{item.major}}</text>
-        </view>
-        <text class="student-id">ID: {{item.student_id}}</text>
-      </view>
-
-      <!-- 右侧操作按钮 (仅普通模式显示) -->
-      <view class="action-group" wx:if="{{!isMultiSelectMode}}">
-        <view class="icon-btn edit" catchtap="editStudent" data-student="{{item}}" hover-class="icon-hover">
-          ✎
-        </view>
-        <view class="icon-btn delete" catchtap="deleteStudent" data-id="{{item.student_id}}" hover-class="icon-hover">
-          ✕
-        </view>
-      </view>
+      <!-- 底部垫片 -->
+      <view style="height: 60rpx;"></view>
     </view>
-    
-    <!-- 底部安全区垫片 -->
-    <view class="safe-area-spacer"></view>
   </scroll-view>
 
   <!-- 空状态 -->
-  <view wx:else class="empty-state">
-    <view class="empty-illustration">📇</view>
-    <text class="empty-title">暂无名单</text>
-    <text class="empty-desc">点击右上角添加学生，或导入 Excel</text>
+  <view wx:else class="empty-state fade-in">
+    <view class="empty-icon-bg">📇</view>
+    <text class="empty-txt">暂无学生名单</text>
+    <text class="empty-sub">点击右上角“新增”按钮添加</text>
   </view>
 
-  <!-- Loading 遮罩 -->
-  <view wx:if="{{loading}}" class="loading-mask">
+  <!-- Loading -->
+  <view wx:if="{{loading}}" class="loading-overlay fade-in">
     <view class="spinner"></view>
   </view>
 
-  <!-- Modal 弹窗 (添加/编辑) -->
-  <view wx:if="{{showModal}}" class="modal-backdrop" bindtap="hideModal">
-     <view class="modal-card" catchtap="stopPropagation">
-      <text class="modal-header">{{isEditing ? '编辑信息' : '新添成员'}}</text>
+  <!-- 弹窗 Modal -->
+  <view wx:if="{{showModal}}" class="modal-mask fade-in" bindtap="hideModal">
+     <view class="modal-content slide-up" catchtap="stopPropagation">
+      <view class="modal-header">
+        <text class="modal-title">{{isEditing ? '编辑信息' : '录入新学生'}}</text>
+      </view>
       
-      <view class="form-item">
+      <view class="form-group">
         <text class="label">学号</text>
         <input
-          class="input-control"
-          placeholder="例如: 2023001"
+          class="input-field"
+          placeholder="请输入学号"
           value="{{currentStudent.student_id}}"
           bindinput="onStudentIdInput"
           type="number"
-          placeholder-class="ph-style"
+          placeholder-class="ph-color"
           disabled="{{isEditing}}"
         />
       </view>
 
-      <view class="form-item">
+      <view class="form-group">
         <text class="label">姓名</text>
         <input 
-          class="input-control" 
-          placeholder="学生姓名" 
+          class="input-field" 
+          placeholder="请输入姓名" 
           value="{{currentStudent.name}}" 
           bindinput="onNameInput" 
-          placeholder-class="ph-style"
+          placeholder-class="ph-color"
         />
       </view>
 
-      <view class="form-item">
-        <text class="label">专业/班级</text>
+      <view class="form-group">
+        <text class="label">专业班级</text>
         <input 
-          class="input-control" 
-          placeholder="例如: 计算机科学" 
+          class="input-field" 
+          placeholder="例如：计算机2301" 
           value="{{currentStudent.major}}" 
           bindinput="onMajorInput" 
-          placeholder-class="ph-style"
+          placeholder-class="ph-color"
         />
       </view>
 
-      <view class="modal-footer">
-        <button class="btn-ghost" bindtap="hideModal">取消</button>
-        <button class="btn-primary" bindtap="saveStudent">保存</button>
+      <view class="modal-actions">
+        <button class="btn-cancel" bindtap="hideModal">取消</button>
+        <button class="btn-save" bindtap="saveStudent">保存信息</button>
       </view>
     </view>
   </view>
+
 </view>

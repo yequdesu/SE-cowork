@@ -1,53 +1,87 @@
 <view class="container">
   <!-- 头部引导 -->
-  <view class="header">
-    <text class="title">导入学生名单</text>
-    <text class="subtitle">支持 .xlsx, .xls 格式文件</text>
+  <view class="header fade-in">
+    <view class="header-content">
+      <text class="title">导入学生名单</text>
+      <text class="subtitle">支持 .xlsx, .xls 格式，单次最大 5MB</text>
+    </view>
   </view>
 
-  <!-- 核心操作区：未选择文件时显示上传引导，选择后显示文件卡片 -->
-  <view class="upload-zone {{selectedFile ? 'has-file' : ''}}" bindtap="{{!selectedFile ? 'chooseFile' : ''}}">
+  <!-- 核心上传区 -->
+  <!-- 使用 hover-class 增加点击反馈 -->
+  <view 
+    class="upload-card {{selectedFile ? 'is-filled' : 'is-empty'}} slide-up" 
+    style="animation-delay: 0.1s;"
+    bindtap="{{!selectedFile ? 'chooseFile' : ''}}"
+    hover-class="{{!selectedFile ? 'card-hover' : ''}}"
+    hover-stay-time="150"
+  >
     
-    <!-- 状态 A: 未选择文件 -->
+    <!-- 状态 A: 未选择文件 (空状态) -->
     <view wx:if="{{!selectedFile}}" class="empty-state">
-      <image class="upload-icon" src="/assets/excel-icon.png" mode="aspectFit" wx:if="{{false}}"></image> <!-- 如果有图标资源 -->
-      <view class="icon-placeholder">+</view> <!-- 无图标时的纯CSS替代 -->
-      <text class="upload-hint">点击选择 Excel 文件</text>
+      <!-- CSS 纯代码绘制的云朵图标，无需图片资源 -->
+      <view class="icon-upload-wrapper">
+        <view class="icon-arrow"></view>
+        <view class="icon-tray"></view>
+      </view>
+      <text class="upload-main-text">点击上传 Excel 文件</text>
+      <text class="upload-sub-text">或将文件拖拽至此处</text>
     </view>
 
-    <!-- 状态 B: 已选择文件 -->
+    <!-- 状态 B: 已选择文件 (文件卡片) -->
     <view wx:else class="file-state">
-      <view class="file-info">
-        <view class="file-icon">xls</view>
-        <view class="file-detail">
-          <text class="file-name">{{fileName}}</text>
-          <text class="file-status">{{uploading ? '正在上传...' : '等待导入'}}</text>
+      <view class="file-content-row">
+        <!-- 文件图标 -->
+        <view class="file-icon-box">
+          <text class="file-ext">XLS</text>
+          <view class="file-fold"></view>
         </view>
-        <!-- 重选按钮 (阻止冒泡防止触发上传) -->
-        <view class="re-select" catchtap="chooseFile" wx:if="{{!uploading}}">重选</view>
+        
+        <!-- 文件信息 -->
+        <view class="file-info">
+          <text class="file-name">{{fileName}}</text>
+          <view class="file-meta">
+            <text class="status-text {{uploading ? 'processing' : ''}}">{{uploading ? '正在解析数据...' : '准备就绪'}}</text>
+          </view>
+        </view>
+
+        <!-- 重选按钮 -->
+        <view class="action-area" catchtap="chooseFile" wx:if="{{!uploading}}">
+          <view class="btn-reselect">更换</view>
+        </view>
       </view>
 
-      <!-- 进度条 (内嵌在卡片中) -->
-      <view class="progress-wrap" wx:if="{{uploading}}">
-        <progress percent="{{progress}}" border-radius="10" activeColor="#4facfe" backgroundColor="#f0f2f5" stroke-width="6" />
+      <!-- 进度条 (仅上传时显示) -->
+      <view class="progress-container" wx:if="{{uploading}}">
+        <progress 
+          percent="{{progress}}" 
+          border-radius="10" 
+          activeColor="#3B82F6" 
+          backgroundColor="#EFF6FF" 
+          stroke-width="4" 
+          active 
+          active-mode="forwards"
+        />
       </view>
     </view>
-  </view>
-
-  <!-- 反馈信息区域 -->
-  <view wx:if="{{message}}" class="feedback-box {{messageType === 'error' ? 'error' : 'success'}}">
-    <text>{{message}}</text>
   </view>
 
   <!-- 底部操作按钮 -->
-  <view class="footer-action">
+  <view class="footer slide-up" style="animation-delay: 0.2s;">
+    <!-- 反馈信息 (嵌入在按钮上方) -->
+    <view wx:if="{{message}}" class="alert-box {{messageType === 'error' ? 'alert-error' : 'alert-success'}}">
+      <text class="alert-icon">{{messageType === 'error' ? '!' : '✓'}}</text>
+      <text>{{message}}</text>
+    </view>
+
     <button 
-      class="btn-submit {{uploading || !selectedFile ? 'disabled' : ''}}" 
+      class="btn-primary {{uploading || !selectedFile ? 'disabled' : ''}}" 
       bindtap="uploadAndImport" 
       disabled="{{!selectedFile || uploading}}"
       hover-class="btn-hover"
     >
-      {{uploading ? '处理中...' : '开始导入'}}
+      {{uploading ? '正在导入...' : '确认导入名单'}}
+      <view class="btn-shine"></view>
     </button>
   </view>
 </view>

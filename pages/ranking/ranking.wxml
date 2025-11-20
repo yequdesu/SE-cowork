@@ -1,88 +1,124 @@
 <view class="container">
   
-  <!-- 顶部栏：标题 + 刷新 -->
-  <view class="header-bar">
-    <text class="page-title">积分排行榜</text>
-    <view class="refresh-icon" bindtap="refreshData" hover-class="icon-hover">
-      <text class="icon-text">↻ 刷新</text>
+  <!-- 【新增】引入 WXS 用于计算比例 -->
+  <wxs module="utils">
+    module.exports.calcHeight = function(score, maxScore) {
+      if (!maxScore || maxScore == 0) return '0%';
+      // 计算百分比，最低给 5% 高度以免太短看不见
+      var percent = (score / maxScore) * 100;
+      return (percent < 5 ? 5 : percent) + '%';
+    }
+  </wxs>
+  
+  <!-- 顶部栏 -->
+  <view class="header fade-in">
+    <view class="header-left">
+      <text class="page-title">积分榜</text>
+      <text class="page-subtitle">今天你拿分了吗</text>
+    </view>
+    <view class="btn-refresh" bindtap="refreshData" hover-class="btn-hover">
+      <text class="icon-refresh {{loading ? 'spinning' : ''}}">↻</text>
     </view>
   </view>
 
-  <!-- 加载中 -->
-  <view wx:if="{{loading}}" class="loading-state">
-    <view class="spinner"></view>
-    <text>正在同步数据...</text>
+  <!-- 加载中状态 -->
+  <view wx:if="{{loading}}" class="loading-state fade-in">
+    <view class="spinner-ring"></view>
+    <text>正在同步最新战况...</text>
   </view>
 
   <view wx:else class="content-body">
     
-    <!-- 顶部前三名展示 (Podium) -->
-    <view class="top-three" wx:if="{{rankings.length >= 3}}">
-      <!-- 亚军 (左) -->
+    <!-- 1. 领奖台区域 (Top 3) -->
+    <view class="podium-section slide-up" wx:if="{{rankings.length >= 3}}" style="animation-delay: 0.1s;">
+      <!-- 亚军 (Rank 2) -->
       <view class="podium-item rank-2">
-        <view class="crown silver">2</view>
-        <view class="avatar">{{rankings[1].name[0]}}</view>
+        <view class="avatar-wrapper ring-silver">
+          <text class="badge-rank">2</text>
+          <view class="avatar">{{rankings[1].name[0]}}</view>
+        </view>
         <text class="name">{{rankings[1].name}}</text>
         <text class="score">{{rankings[1].score}}</text>
       </view>
       
-      <!-- 冠军 (中，最大) -->
+      <!-- 冠军 (Rank 1) -->
       <view class="podium-item rank-1">
-        <view class="crown gold">👑</view>
-        <view class="avatar main">{{rankings[0].name[0]}}</view>
-        <text class="name">{{rankings[0].name}}</text>
-        <text class="score main">{{rankings[0].score}}</text>
+        <view class="crown-icon">👑</view>
+        <view class="avatar-wrapper ring-gold">
+          <text class="badge-rank">1</text>
+          <view class="avatar large">{{rankings[0].name[0]}}</view>
+          <!-- 光效装饰 -->
+          <view class="shine-effect"></view>
+        </view>
+        <text class="name main-name">{{rankings[0].name}}</text>
+        <text class="score main-score">{{rankings[0].score}}</text>
       </view>
       
-      <!-- 季军 (右) -->
+      <!-- 季军 (Rank 3) -->
       <view class="podium-item rank-3">
-        <view class="crown bronze">3</view>
-        <view class="avatar">{{rankings[2].name[0]}}</view>
+        <view class="avatar-wrapper ring-bronze">
+          <text class="badge-rank">3</text>
+          <view class="avatar">{{rankings[2].name[0]}}</view>
+        </view>
         <text class="name">{{rankings[2].name}}</text>
         <text class="score">{{rankings[2].score}}</text>
       </view>
     </view>
 
-    <!-- 统计图表 (改为横向滚动，防止拥挤) -->
-    <view class="section-card">
-      <text class="section-title">趋势分析</text>
+    <!-- 2. 趋势分析 (图表) -->
+    <view class="section-card slide-up" style="animation-delay: 0.2s;">
+      <view class="card-header">
+        <text class="section-title">积分趋势</text>
+        <text class="section-tag">Top 10</text>
+      </view>
       <scroll-view scroll-x class="chart-scroll" enable-flex>
-        <view class="chart-wrapper">
+        <view class="chart-container">
+          <!-- 这里假设 rankings 是按分数排序的，所以 rankings[0] 是最高分 -->
           <view wx:for="{{rankings}}" wx:key="studentId" class="bar-group">
-            <text class="bar-val">{{item.score}}</text>
-            <!-- 动态高度 + 渐变色 -->
-            <view class="bar" style="height: {{item.score * 4}}rpx; background: {{index < 3 ? 'var(--gradient-gold)' : 'var(--gradient-blue)'}}"></view>
-            <text class="bar-name">{{item.name}}</text>
+            <text class="bar-value">{{item.score}}</text>
+            <!-- 进度条容器 -->
+            <view class="bar-track">
+              <!-- 【修复】使用 WXS 动态计算高度百分比 -->
+              <view 
+                class="bar-fill {{index < 3 ? 'fill-hot' : 'fill-cool'}}" 
+                style="height: {{utils.calcHeight(item.score, rankings[0].score)}};" 
+              ></view>
+            </view>
+            <text class="bar-label">{{item.name}}</text>
           </view>
         </view>
       </scroll-view>
     </view>
 
-    <!-- 详细排名列表 -->
-    <view class="list-section">
-      <text class="section-title">详细名单</text>
+    <!-- 3. 详细名单列表 -->
+    <view class="list-section slide-up" style="animation-delay: 0.3s;">
       <view class="list-header">
-        <text class="col-rank">排名</text>
-        <text class="col-name">学生信息</text>
-        <text class="col-data">点名 / 积分</text>
+        <text>名次</text>
+        <text class="align-left">学员信息</text>
+        <text class="align-right">积分</text>
       </view>
 
-      <view wx:for="{{rankings}}" wx:key="studentId" class="rank-card">
-        <!-- 排名徽章 -->
-        <view class="rank-badge {{index < 3 ? 'top-' + (index + 1) : ''}}">
-          {{index + 1}}
+      <view wx:for="{{rankings}}" wx:key="studentId" class="rank-row" hover-class="row-hover">
+        <!-- 排名 -->
+        <view class="col-rank">
+          <!-- 【修复】统一排名的样式类 -->
+          <view class="rank-num {{index < 3 ? 'top-rank rank-' + (index+1) : 'normal-rank'}}">
+            {{index + 1}}
+          </view>
         </view>
         
         <!-- 信息 -->
-        <view class="info-block">
-          <text class="student-name">{{item.name}}</text>
-          <text class="student-id">{{item.studentId}}</text>
+        <view class="col-info">
+          <view class="row-avatar">{{item.name[0]}}</view>
+          <view class="info-text">
+            <text class="student-name">{{item.name}}</text>
+            <text class="student-count">签到 {{item.rollCallCount}} 次</text>
+          </view>
         </view>
         
-        <!-- 数据 -->
-        <view class="data-block">
-          <text class="count-label">{{item.rollCallCount}}次</text>
-          <text class="score-val">{{item.score}}</text>
+        <!-- 分数 -->
+        <view class="col-score">
+          <text class="score-num">{{item.score}}</text>
         </view>
       </view>
     </view>

@@ -1,79 +1,117 @@
 <view class="container">
   
-  <!-- 顶部导航/模式切换 -->
-  <view class="header-section">
-    <text class="page-title">课堂点名</text>
-    <view class="tab-control">
+  <!-- 顶部导航：胶囊切换 -->
+  <view class="header fade-in">
+    <view class="header-text">
+      <text class="title">课堂点名</text>
+      <text class="subtitle">公平随机，高效记录</text>
+    </view>
+    
+    <view class="segment-control">
       <view 
-        class="tab-item {{currentMode === 'random' ? 'active' : ''}}" 
+        class="segment-item {{currentMode === 'random' ? 'active' : ''}}" 
         bindtap="selectMode" 
         data-mode="random"
-      >随机模式</view>
+      >随机</view>
       <view 
-        class="tab-item {{currentMode === 'sequential' ? 'active' : ''}}" 
+        class="segment-item {{currentMode === 'sequential' ? 'active' : ''}}" 
         bindtap="selectMode" 
         data-mode="sequential"
-      >顺序模式</view>
+      >顺序</view>
+      <!-- 滑块背景 (可选，配合 CSS 实现平滑移动，这里简化处理) -->
     </view>
   </view>
 
-  <!-- 核心展示区：大卡片 -->
-  <view class="hero-card">
-    <!-- 空状态/等待状态 -->
-    <view wx:if="{{!currentStudent.name}}" class="empty-state">
-      <view class="placeholder-icon">?</view>
-      <text class="placeholder-text">准备就绪，请开始点名</text>
-    </view>
+  <!-- 核心展示区：抽奖卡牌 -->
+  <view class="hero-section slide-up" style="animation-delay: 0.1s;">
+    <view class="student-card {{currentStudent.name ? 'has-data' : 'is-empty'}}">
+      
+      <!-- 装饰背景圆 -->
+      <view class="bg-circle c-1"></view>
+      <view class="bg-circle c-2"></view>
 
-    <!-- 结果状态 -->
-    <view wx:else class="result-state">
-      <view class="avatar-placeholder">{{currentStudent.name[0]}}</view>
-      <text class="student-name">{{currentStudent.name}}</text>
-      <text class="student-id">{{currentStudent.student_id}}</text>
+      <!-- 状态 A: 待机中 -->
+      <view wx:if="{{!currentStudent.name}}" class="state-empty">
+        <view class="empty-icon-box">
+          <text class="icon-pulse">🎲</text>
+        </view>
+        <text class="empty-hint">点击按钮开始抽取</text>
+      </view>
+
+      <!-- 状态 B: 选中结果 -->
+      <view wx:else class="state-result">
+        <view class="avatar-ring">
+          <view class="avatar">{{currentStudent.name[0]}}</view>
+        </view>
+        <text class="result-name">{{currentStudent.name}}</text>
+        <text class="result-id">{{currentStudent.student_id}}</text>
+        <view class="shine-overlay"></view>
+      </view>
     </view>
   </view>
 
   <!-- 核心操作按钮 -->
-  <button class="btn-main" hover-class="btn-hover" bindtap="performRollCall">
-    <text class="icon-dice">🎲</text> 开始点名
-  </button>
+  <view class="action-section slide-up" style="animation-delay: 0.2s;">
+    <button 
+      class="btn-main" 
+      hover-class="btn-main-hover" 
+      bindtap="performRollCall"
+    >
+      <text class="btn-icon">⚡️</text>
+      <text>开始点名</text>
+      <view class="btn-shine"></view>
+    </button>
+  </view>
 
-  <!-- 评价/更新表单 (仅在有学生时显示，或者一直显示但置灰，这里假设有结果才显示) -->
-  <view class="evaluation-panel {{currentStudent.name ? 'show' : ''}}">
-    <text class="panel-title">课堂表现记录</text>
+  <!-- 评价表单 (选人后显示) -->
+  <view class="evaluation-panel {{currentStudent.name ? 'is-visible' : ''}} slide-up" style="animation-delay: 0.3s;">
+    <view class="panel-header">
+      <text class="panel-title">课堂表现</text>
+      <view class="status-indicator"></view>
+    </view>
     
-    <!-- 标签式开关 -->
-    <view class="tags-row">
-      <view 
-        class="tag-item {{arrived ? 'active success' : ''}}" 
-        bindtap="toggleArrived"
-      >
-        <text wx:if="{{arrived}}">✓</text> 已到达
+    <view class="panel-body">
+      <!-- 快捷标签 -->
+      <view class="tags-container">
+        <view 
+          class="tag-chip {{arrived ? 'active-green' : ''}}" 
+          bindtap="toggleArrived"
+          hover-class="chip-hover"
+        >
+          <text class="chip-icon">{{arrived ? '✓' : '○'}}</text>
+          <text>已到场</text>
+        </view>
+        
+        <view 
+          class="tag-chip {{repeatedQuestion ? 'active-orange' : ''}}" 
+          bindtap="toggleRepeated"
+          hover-class="chip-hover"
+        >
+          <text class="chip-icon">{{repeatedQuestion ? '✓' : '?'}}</text>
+          <text>重复提问</text>
+        </view>
       </view>
-      
-      <view 
-        class="tag-item {{repeatedQuestion ? 'active warning' : ''}}" 
-        bindtap="toggleRepeated"
-      >
-        <text wx:if="{{repeatedQuestion}}">✓</text> 重复提问
+
+      <!-- 评分输入 -->
+      <view class="score-wrapper">
+        <text class="label">评分</text>
+        <view class="input-box">
+          <input 
+            class="score-input" 
+            placeholder="0" 
+            value="{{scoreInput}}" 
+            bindinput="onScoreInput" 
+            type="number" 
+            maxlength="2"
+            confirm-type="done"
+          />
+          <text class="suffix">分</text>
+        </view>
       </view>
     </view>
 
-    <!-- 分数输入 -->
-    <view class="input-group">
-      <text class="input-label">回答评分</text>
-      <input 
-        class="score-input" 
-        placeholder="0-10" 
-        value="{{scoreInput}}" 
-        bindinput="onScoreInput" 
-        type="number" 
-        confirm-type="done"
-      />
-    </view>
-
-    <button class="btn-secondary" hover-class="btn-secondary-hover" bindtap="submitUpdate">
-      提交记录
+    <button class="btn-submit" hover-class="btn-sub-hover" bindtap="submitUpdate">
+      确认记录
     </button>
   </view>
 
