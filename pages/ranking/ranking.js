@@ -19,11 +19,20 @@ Page({
   // 加载排名数据
   loadRankings: function() {
     const that = this;
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
     this.setData({
       loading: true
     });
     wx.request({
-      url: `${API_BASE_URL}/scores`,
+      url: `${API_BASE_URL}/scores?course_id=${course_id}`,
       method: 'GET',
       success: function(res) {
         that.setData({

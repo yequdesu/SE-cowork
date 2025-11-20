@@ -6,11 +6,20 @@ const router = express.Router();
 // GET /students - 获取所有学生列表
 router.get('/students', async (req, res) => {
     try {
+        const { course_id } = req.query;
         const connection = await db.getConnection();
 
-        const [students] = await connection.execute(
-            'SELECT student_id, name, major, total_score, roll_call_count FROM students ORDER BY student_id'
-        );
+        let query = 'SELECT student_id, name, major, total_score, roll_call_count FROM students';
+        let params = [];
+
+        if (course_id) {
+            query += ' WHERE course_id = ?';
+            params.push(course_id);
+        }
+
+        query += ' ORDER BY student_id';
+
+        const [students] = await connection.execute(query, params);
 
         connection.release();
 
@@ -28,39 +37,54 @@ router.get('/students', async (req, res) => {
 router.post('/students', async (req, res) => {
     try {
         const { student_id, name, major } = req.body;
+        const { course_id } = req.query;
 
-        if (!student_id || !name || !major) {
+        if (!student_id || !name || !major || !course_id) {
             return res.status(400).json({
                 success: false,
-                message: '学号、姓名和专业都是必填项'
+                message: '学号、姓名、专业和课程ID都是必填项'
             });
         }
 
         const connection = await db.getConnection();
 
-        // 检查学号是否已存在
+        // 检查学生是否已在该课程中
         const [existing] = await connection.execute(
-            'SELECT student_id FROM students WHERE student_id = ?',
-            [student_id]
+            'SELECT student_id FROM students WHERE student_id = ? AND course_id = ?',
+            [student_id, course_id]
         );
 
         if (existing.length > 0) {
             connection.release();
             return res.status(400).json({
                 success: false,
-                message: '学号已存在'
+                message: '该学生已在该课程中'
+            });
+        }
+
+        // 检查课程ID是否存在
+        const [courseExisting] = await connection.execute(
+            'SELECT id FROM courses WHERE id = ?',
+            [course_id]
+        );
+
+        if (courseExisting.length === 0) {
+            connection.release();
+            return res.status(400).json({
+                success: false,
+                message: '课程ID不存在'
             });
         }
 
         // 插入新学生
         await connection.execute(
-            'INSERT INTO students (student_id, name, major, total_score, roll_call_count) VALUES (?, ?, ?, 0, 0)',
-            [student_id, name, major]
+            'INSERT INTO students (student_id, name, major, course_id, total_score, roll_call_count) VALUES (?, ?, ?, ?, 0, 0)',
+            [student_id, name, major, course_id]
         );
 
         connection.release();
 
-        console.log('学生添加成功: 学号=%s, 姓名=%s, 专业=%s', student_id, name, major);
+        console.log('学生添加成功: 学号=%s, 姓名=%s, 专业=%s, 课程ID=%s', student_id, name, major, course_id);
 
         res.json({
             success: true,
@@ -80,7 +104,15 @@ router.post('/students', async (req, res) => {
 router.put('/students/:student_id', async (req, res) => {
     try {
         const { student_id } = req.params;
+        const { course_id } = req.query;
         const { name, major } = req.body;
+
+        if (!course_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'course_id参数是必填项'
+            });
+        }
 
         if (!name || !major) {
             return res.status(400).json({
@@ -93,8 +125,8 @@ router.put('/students/:student_id', async (req, res) => {
 
         // 检查学生是否存在
         const [existing] = await connection.execute(
-            'SELECT student_id FROM students WHERE student_id = ?',
-            [student_id]
+            'SELECT student_id FROM students WHERE student_id = ? AND course_id = ?',
+            [student_id, course_id]
         );
 
         if (existing.length === 0) {
@@ -105,15 +137,15 @@ router.put('/students/:student_id', async (req, res) => {
             });
         }
 
-        // 更新学生信息
+        // 更新学生信息（只允许修改姓名和专业）
         await connection.execute(
-            'UPDATE students SET name = ?, major = ? WHERE student_id = ?',
-            [name, major, student_id]
+            'UPDATE students SET name = ?, major = ? WHERE student_id = ? AND course_id = ?',
+            [name, major, student_id, course_id]
         );
 
         connection.release();
 
-        console.log('学生信息修改成功: 学号=%s, 新姓名=%s, 新专业=%s', student_id, name, major);
+        console.log('学生信息修改成功: 学号=%s, 新姓名=%s, 新专业=%s, 课程ID=%s', student_id, name, major, course_id);
 
         res.json({
             success: true,
@@ -133,13 +165,21 @@ router.put('/students/:student_id', async (req, res) => {
 router.delete('/students/:student_id', async (req, res) => {
     try {
         const { student_id } = req.params;
+        const { course_id } = req.query;
+
+        if (!course_id) {
+            return res.status(400).json({
+                success: false,
+                message: 'course_id参数是必填项'
+            });
+        }
 
         const connection = await db.getConnection();
 
         // 检查学生是否存在
         const [existing] = await connection.execute(
-            'SELECT student_id FROM students WHERE student_id = ?',
-            [student_id]
+            'SELECT student_id FROM students WHERE student_id = ? AND course_id = ?',
+            [student_id, course_id]
         );
 
         if (existing.length === 0) {
@@ -150,21 +190,21 @@ router.delete('/students/:student_id', async (req, res) => {
             });
         }
 
-        // 先删除该学生在roll_calls表中的所有记录
+        // 先删除该学生在该课程中的roll_calls记录
         await connection.execute(
-            'DELETE FROM roll_calls WHERE student_id = ?',
-            [student_id]
+            'DELETE FROM roll_calls WHERE student_id = ? AND course_id = ?',
+            [student_id, course_id]
         );
 
         // 删除学生
         await connection.execute(
-            'DELETE FROM students WHERE student_id = ?',
-            [student_id]
+            'DELETE FROM students WHERE student_id = ? AND course_id = ?',
+            [student_id, course_id]
         );
 
         connection.release();
 
-        console.log('学生删除成功: 学号=%s', student_id);
+        console.log('学生删除成功: 学号=%s, 课程ID=%s', student_id, course_id);
 
         res.json({
             success: true,

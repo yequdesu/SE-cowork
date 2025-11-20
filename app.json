@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/import/import",
+    "pages/course-select/course-select",
     "pages/roll-call/roll-call",
     "pages/ranking/ranking",
     "pages/settings/settings"
@@ -17,6 +18,10 @@
       {
         "pagePath": "pages/import/import",
         "text": "导入"
+      },
+      {
+        "pagePath": "pages/course-select/course-select",
+        "text": "课程"
       },
       {
         "pagePath": "pages/roll-call/roll-call",

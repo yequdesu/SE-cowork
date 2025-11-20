@@ -20,7 +20,7 @@
       <view class="file-info">
         <view class="file-icon">xls</view>
         <view class="file-detail">
-          <text class="file-name">{{selectedFile}}</text>
+          <text class="file-name">{{fileName}}</text>
           <text class="file-status">{{uploading ? '正在上传...' : '等待导入'}}</text>
         </view>
         <!-- 重选按钮 (阻止冒泡防止触发上传) -->

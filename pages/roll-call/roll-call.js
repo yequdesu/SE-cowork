@@ -42,29 +42,46 @@ Page({
 
   // 加载学生列表
   loadStudents: function() {
+    console.log('[DEBUG] loadStudents: 开始加载学生列表');
     const that = this;
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      console.log('[DEBUG] loadStudents: 未选择课程');
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
+    console.log('[DEBUG] loadStudents: 课程ID:', course_id);
     this.setData({
       loading: true
     });
     wx.request({
-      url: `${API_BASE_URL}/students`,
+      url: `${API_BASE_URL}/students?course_id=${course_id}`,
       method: 'GET',
       success: function(res) {
+        console.log('[DEBUG] loadStudents: API响应状态码:', res.statusCode);
+        console.log('[DEBUG] loadStudents: API响应数据:', res.data);
         that.setData({
           loading: false
         });
         if (res.statusCode === 200 && res.data.success) {
+          console.log('[DEBUG] loadStudents: 学生列表加载成功，学生数量:', res.data.students.length);
           that.setData({
             students: res.data.students,
             message: '学生列表加载成功'
           });
         } else {
+          console.log('[DEBUG] loadStudents: 加载学生列表失败，响应:', res.data);
           that.setData({
             message: '加载学生列表失败'
           });
         }
       },
       fail: function(err) {
+        console.log('[DEBUG] loadStudents: 网络错误:', err.errMsg);
         that.setData({
           loading: false,
           message: '网络错误：' + err.errMsg
@@ -123,7 +140,9 @@ Page({
   },
   // 执行点名（调用API）
   performRollCall: function() {
+    console.log('[DEBUG] performRollCall: 开始执行点名');
     if (this.data.students.length === 0) {
+      console.log('[DEBUG] performRollCall: 无学生数据');
       wx.showToast({
         title: '无学生数据',
         icon: 'none'
@@ -132,24 +151,40 @@ Page({
     }
 
     const that = this;
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      console.log('[DEBUG] performRollCall: 未选择课程');
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
+    console.log('[DEBUG] performRollCall: 课程ID:', course_id, '模式:', this.data.selectedMode);
     this.setData({
       loading: true
     });
 
     const mode = this.data.selectedMode;
-    const url = mode === 'random' ? `${API_BASE_URL}/rollCall/random` : `${API_BASE_URL}/rollCall/sequential`;
+    const url = mode === 'random' ? `${API_BASE_URL}/rollCall/random?course_id=${course_id}` : `${API_BASE_URL}/rollCall/sequential?course_id=${course_id}`;
+    console.log('[DEBUG] performRollCall: 请求URL:', url);
 
     wx.request({
       url: url,
       method: 'GET',
       success: function(res) {
+        console.log('[DEBUG] performRollCall: API响应状态码:', res.statusCode);
+        console.log('[DEBUG] performRollCall: API响应数据:', res.data);
         that.setData({
           loading: false
         });
         if (res.statusCode === 200) {
           // 找到对应的学生信息
           const selectedStudent = that.data.students.find(student => student.student_id.toString() === res.data.student_id.toString());
+          console.log('[DEBUG] performRollCall: 找到的学生:', selectedStudent);
           if (selectedStudent) {
+            console.log('[DEBUG] performRollCall: 点名成功，学生:', selectedStudent.name);
             that.setData({
               currentStudent: selectedStudent,
               scoreInput: '',
@@ -158,17 +193,20 @@ Page({
               message: `点名成功：${selectedStudent.name}`
             });
           } else {
+            console.log('[DEBUG] performRollCall: 未找到学生信息');
             that.setData({
               message: '点名失败：未找到学生信息'
             });
           }
         } else {
+          console.log('[DEBUG] performRollCall: 点名失败，错误:', res.data.error);
           that.setData({
             message: '点名失败：' + (res.data.error || '未知错误')
           });
         }
       },
       fail: function(err) {
+        console.log('[DEBUG] performRollCall: 网络错误:', err.errMsg);
         that.setData({
           loading: false,
           message: '网络错误：' + err.errMsg
@@ -186,7 +224,9 @@ Page({
 
   // 更新积分
   updateScore: function() {
+    console.log('[DEBUG] updateScore: 开始更新积分');
     if (!this.data.currentStudent) {
+      console.log('[DEBUG] updateScore: 未选择学生');
       wx.showToast({
         title: '请先点名',
         icon: 'none'
@@ -195,7 +235,9 @@ Page({
     }
 
     const score = parseInt(this.data.scoreInput);
+    console.log('[DEBUG] updateScore: 输入积分:', this.data.scoreInput, '解析后:', score);
     if (isNaN(score)) {
+      console.log('[DEBUG] updateScore: 积分无效');
       wx.showToast({
         title: '请输入有效积分',
         icon: 'none'
@@ -204,6 +246,17 @@ Page({
     }
 
     const that = this;
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      console.log('[DEBUG] updateScore: 未选择课程');
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
+    console.log('[DEBUG] updateScore: 学生ID:', this.data.currentStudent.student_id, '积分:', score, '课程ID:', course_id);
     this.setData({
       updating: true
     });
@@ -213,13 +266,17 @@ Page({
       method: 'POST',
       data: {
         studentId: this.data.currentStudent.student_id,
-        score: score
+        score: score,
+        course_id: course_id
       },
       success: function(res) {
+        console.log('[DEBUG] updateScore: API响应状态码:', res.statusCode);
+        console.log('[DEBUG] updateScore: API响应数据:', res.data);
         that.setData({
           updating: false
         });
         if (res.statusCode === 200 && res.data.success) {
+          console.log('[DEBUG] updateScore: 积分更新成功');
           that.setData({
             message: '积分更新成功'
           });
@@ -239,12 +296,14 @@ Page({
             currentStudent: { ...that.data.currentStudent, total_score: score }
           });
         } else {
+          console.log('[DEBUG] updateScore: 更新失败，错误:', res.data.message);
           that.setData({
             message: '更新失败：' + (res.data.message || '未知错误')
           });
         }
       },
       fail: function(err) {
+        console.log('[DEBUG] updateScore: 网络错误:', err.errMsg);
         that.setData({
           updating: false,
           message: '网络错误：' + err.errMsg
@@ -287,6 +346,15 @@ Page({
     }
 
     const that = this;
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
     this.setData({
       updating: true
     });
@@ -296,7 +364,8 @@ Page({
       method: 'POST',
       data: {
         studentId: this.data.currentStudent.student_id,
-        score: score
+        score: score,
+        course_id: course_id
       },
       success: function(res) {
         that.setData({

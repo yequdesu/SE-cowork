@@ -7,11 +7,18 @@ const router = express.Router();
 // GET /exportScores - 导出积分详单
 router.get('/exportScores', async (req, res) => {
     try {
+        const { course_id } = req.query;
+
+        if (!course_id) {
+            return res.status(400).json({ error: 'course_id参数是必填项' });
+        }
+
         const connection = await db.getConnection();
 
-        // 查询所有学生数据：学号、姓名、专业、随机点名次数、总积分
+        // 查询指定课程的学生数据：学号、姓名、专业、随机点名次数、总积分
         const [students] = await connection.execute(
-            'SELECT student_id, name, major, roll_call_count, total_score FROM students'
+            'SELECT student_id, name, major, roll_call_count, total_score FROM students WHERE course_id = ?',
+            [course_id]
         );
 
         connection.release();

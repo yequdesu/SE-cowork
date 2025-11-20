@@ -12,6 +12,12 @@ const upload = multer({ dest: 'uploads/' });
 // POST /importStudents - 导入学生名单
 router.post('/importStudents', upload.single('file'), async (req, res) => {
     try {
+        const { course_id } = req.body;
+
+        if (!course_id) {
+            return res.status(400).json({ error: 'course_id参数是必填项' });
+        }
+
         if (!req.file) {
             return res.status(400).json({ error: '未提供文件' });
         }
@@ -49,22 +55,12 @@ router.post('/importStudents', upload.single('file'), async (req, res) => {
                 continue; // 跳过无效行
             }
 
-            // 检查学号是否已存在
-            const [existing] = await connection.execute(
-                'SELECT student_id FROM students WHERE student_id = ?',
-                [studentId]
+            // 插入或更新学生信息，确保学生在指定课程中
+            const result = await connection.execute(
+                'INSERT INTO students (student_id, name, major, course_id, total_score, roll_call_count) VALUES (?, ?, ?, ?, 0, 0) ON DUPLICATE KEY UPDATE name = VALUES(name), major = VALUES(major), course_id = VALUES(course_id)',
+                [studentId, name, major, course_id]
             );
-
-            if (existing.length === 0) {
-                // 插入新学生
-                await connection.execute(
-                    'INSERT INTO students (student_id, name, major) VALUES (?, ?, ?)',
-                    [studentId, name, major]
-                );
-                insertedCount++;
-            } else {
-                skippedCount++;
-            }
+            insertedCount++;
         }
 
         connection.release();

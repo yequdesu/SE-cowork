@@ -1,0 +1,244 @@
+/* 全局重置与变量 */
+page {
+  background-color: #f7f8fa;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", STHeiti, "Microsoft Yahei", Tahoma, Simsun, sans-serif;
+  --primary-color: #2c3e50;
+  --accent-color: #005bea;
+  --success-color: #07c160;
+  --text-main: #333;
+  --text-sub: #999;
+}
+
+.container {
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 头部 */
+.header {
+  margin-bottom: 60rpx;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 16rpx;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: var(--text-sub);
+}
+
+/* 当前选中的课程 */
+.selected-course {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin-bottom: 40rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.05);
+}
+
+.selected-label {
+  font-size: 28rpx;
+  color: var(--text-sub);
+  margin-bottom: 10rpx;
+  display: block;
+}
+
+.selected-name {
+  font-size: 36rpx;
+  font-weight: 600;
+  color: var(--primary-color);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.selected-desc {
+  font-size: 28rpx;
+  color: var(--text-sub);
+}
+
+/* 课程列表 */
+.course-list {
+  margin-bottom: 60rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  margin-bottom: 30rpx;
+  display: block;
+}
+
+.empty-list {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 60rpx;
+  text-align: center;
+  color: var(--text-sub);
+  font-size: 28rpx;
+}
+
+.list-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
+}
+
+.course-item {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 5rpx 15rpx rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.course-item.selected {
+  border: 3rpx solid var(--accent-color);
+  box-shadow: 0 10rpx 30rpx rgba(0, 91, 234, 0.15);
+}
+
+.course-info {
+  flex: 1;
+}
+
+.course-name {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  display: block;
+  margin-bottom: 8rpx;
+}
+
+.course-desc {
+  font-size: 26rpx;
+  color: var(--text-sub);
+}
+
+.select-btn {
+  padding: 16rpx 32rpx;
+  background: var(--accent-color);
+  color: #fff;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+.course-item.selected .select-btn {
+  background: var(--success-color);
+}
+
+.course-actions {
+  display: flex;
+  gap: 20rpx;
+}
+
+.delete-btn {
+  padding: 16rpx 32rpx;
+  background: #ff4757;
+  color: #fff;
+  border-radius: 50rpx;
+  font-size: 28rpx;
+  font-weight: 500;
+  transition: all 0.3s ease;
+}
+
+/* 创建新课程 */
+.create-section {
+  margin-bottom: 60rpx;
+}
+
+.form {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 40rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.05);
+}
+
+.input-field {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  margin-bottom: 30rpx;
+  box-sizing: border-box;
+}
+
+.input-field:focus {
+  border-color: var(--accent-color);
+}
+
+.textarea-field {
+  width: 100%;
+  padding: 24rpx;
+  border: 2rpx solid #e0e0e0;
+  border-radius: 12rpx;
+  font-size: 30rpx;
+  min-height: 120rpx;
+  margin-bottom: 40rpx;
+  box-sizing: border-box;
+}
+
+.textarea-field:focus {
+  border-color: var(--accent-color);
+}
+
+.btn-create {
+  background: linear-gradient(135deg, #005bea 0%, #00c6fb 100%);
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 24rpx 0;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 10rpx 20rpx rgba(0, 91, 234, 0.2);
+  border: none;
+  transition: all 0.3s;
+  width: 100%;
+}
+
+.btn-create::after {
+  border: none;
+}
+
+.btn-create.disabled {
+  background: #e0e0e0;
+  color: #fff;
+  box-shadow: none;
+}
+
+.btn-hover {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* 反馈消息 */
+.feedback-box {
+  margin-top: 40rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  text-align: center;
+  animation: fadeIn 0.3s;
+}
+
+.feedback-box text {
+  color: #333;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}

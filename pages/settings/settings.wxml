@@ -114,14 +114,14 @@
       
       <view class="form-item">
         <text class="label">学号</text>
-        <input 
-          class="input-control" 
-          placeholder="例如: 2023001" 
-          value="{{currentStudent.student_id}}" 
-          bindinput="onStudentIdInput" 
-          disabled="{{isEditing}}" 
-          type="number" 
+        <input
+          class="input-control"
+          placeholder="例如: 2023001"
+          value="{{currentStudent.student_id}}"
+          bindinput="onStudentIdInput"
+          type="number"
           placeholder-class="ph-style"
+          disabled="{{isEditing}}"
         />
       </view>
 

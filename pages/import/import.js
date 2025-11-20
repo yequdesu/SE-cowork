@@ -53,12 +53,15 @@ Page({
   },
 
   // 上传文件方法
-  uploadFile: function(successCallback, failCallback) {
+  uploadFile: function(successCallback, failCallback, course_id) {
     const that = this;
     const uploadTask = wx.uploadFile({
       url: `${API_BASE_URL}/importStudents`,
       filePath: this.data.selectedFile.path,
       name: 'file',
+      formData: {
+        course_id: course_id
+      },
       success: function(res) {
         if (successCallback) {
           successCallback(res);
@@ -92,6 +95,16 @@ Page({
       return;
     }
 
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'none'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
+
     this.setData({
       uploading: true,
       message: '正在上传...',
@@ -108,7 +121,7 @@ Page({
           const data = JSON.parse(res.data);
           if (data.success) {
             that.setData({
-              message: '导入成功：' + data.message + ` (新增${data.inserted}人，跳过${data.skipped}人)`
+              message: '导入成功！'
             });
             wx.showToast({
               title: '导入成功',
@@ -116,7 +129,7 @@ Page({
             });
           } else {
             that.setData({
-              message: '导入失败：' + data.message
+              message: '导入失败：' + data.error
             });
             wx.showToast({
               title: '导入失败',
@@ -135,7 +148,8 @@ Page({
           message: '上传失败：' + err.errMsg
         });
         console.error('上传失败：', err);
-      }
+      },
+      course_id
     );
   }
 });

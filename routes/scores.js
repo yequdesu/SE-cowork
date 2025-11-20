@@ -7,6 +7,7 @@ const router = express.Router();
 router.get('/scores', async (req, res) => {
     try {
         const limit = parseInt(req.query.limit) || 10;
+        const { course_id } = req.query;
 
         // 验证limit参数
         if (limit <= 0 || limit > 100) {
@@ -16,10 +17,18 @@ router.get('/scores', async (req, res) => {
         const connection = await db.getConnection();
 
         // 查询积分最高的limit名学生
-        const [students] = await connection.execute(
-            'SELECT student_id, name, major, total_score, roll_call_count FROM students ORDER BY total_score DESC LIMIT ?',
-            [limit]
-        );
+        let query = 'SELECT student_id, name, major, total_score, roll_call_count FROM students';
+        let params = [];
+
+        if (course_id) {
+            query += ' WHERE course_id = ?';
+            params.push(course_id);
+        }
+
+        query += ' ORDER BY total_score DESC LIMIT ?';
+        params.push(limit);
+
+        const [students] = await connection.execute(query, params);
 
         connection.release();
 

@@ -17,6 +17,7 @@ app.use('/api', require('./routes/importStudents'));
 app.use('/api/rollCall', require('./routes/rollCall'));
 app.use('/api', require('./routes/updateRollCall'));
 app.use('/api', require('./routes/exportScores'));
+app.use('/api', require('./routes/courses'));
 
 // 健康检查
 app.get('/health', (req, res) => {

@@ -25,9 +25,18 @@ Page({
 
   // 加载学生列表
   loadStudents: function() {
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
     this.setData({ loading: true });
     wx.request({
-      url: 'http://localhost:3001/api/students',
+      url: `http://localhost:3001/api/students?course_id=${course_id}`,
       method: 'GET',
       success: (res) => {
         if (res.data.success) {
@@ -124,7 +133,8 @@ Page({
     const { currentStudent, isEditing } = this.data;
 
     // 验证输入
-    if (!currentStudent.student_id || !currentStudent.name || !currentStudent.major) {
+    if ((isEditing && (!currentStudent.name || !currentStudent.major)) ||
+        (!isEditing && (!currentStudent.student_id || !currentStudent.name || !currentStudent.major))) {
       wx.showToast({
         title: '请填写完整信息',
         icon: 'error'
@@ -132,15 +142,29 @@ Page({
       return;
     }
 
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
     const url = isEditing
-      ? `http://localhost:3001/api/students/${currentStudent.student_id}`
-      : 'http://localhost:3001/api/students';
+      ? `http://localhost:3001/api/students/${currentStudent.student_id}?course_id=${course_id}`
+      : `http://localhost:3001/api/students?course_id=${course_id}`;
     const method = isEditing ? 'PUT' : 'POST';
+
+    // 编辑时只发送name和major，添加时发送所有字段
+    const data = isEditing
+      ? { name: currentStudent.name, major: currentStudent.major }
+      : currentStudent;
 
     wx.request({
       url: url,
       method: method,
-      data: currentStudent,
+      data: data,
       success: (res) => {
         if (res.data.success) {
           wx.showToast({
@@ -168,6 +192,15 @@ Page({
   // 删除学生
   deleteStudent: function(e) {
     const studentId = e.currentTarget.dataset.id;
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
 
     wx.showModal({
       title: '确认删除',
@@ -175,7 +208,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.request({
-            url: `http://localhost:3001/api/students/${studentId}`,
+            url: `http://localhost:3001/api/students/${studentId}?course_id=${course_id}`,
             method: 'DELETE',
             success: (res) => {
               if (res.data.success) {
@@ -243,6 +276,15 @@ Page({
       });
       return;
     }
+    const selectedCourse = wx.getStorageSync('selectedCourse');
+    if (!selectedCourse) {
+      wx.showToast({
+        title: '请先选择课程',
+        icon: 'error'
+      });
+      return;
+    }
+    const course_id = selectedCourse.id;
     wx.showModal({
       title: '确认删除',
       content: `确定要删除选中的 ${this.data.selectedStudents.length} 位学生吗？`,
@@ -251,7 +293,7 @@ Page({
           const promises = this.data.selectedStudents.map(id =>
             new Promise((resolve, reject) => {
               wx.request({
-                url: `http://localhost:3001/api/students/${id}`,
+                url: `http://localhost:3001/api/students/${id}?course_id=${course_id}`,
                 method: 'DELETE',
                 success: resolve,
                 fail: reject

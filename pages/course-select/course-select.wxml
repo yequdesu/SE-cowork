@@ -1,0 +1,71 @@
+<view class="container">
+  <!-- 头部 -->
+  <view class="header">
+    <text class="title">课程选择</text>
+    <text class="subtitle">选择或创建课程</text>
+  </view>
+
+  <!-- 当前选中的课程 -->
+  <view wx:if="{{selectedCourse}}" class="selected-course">
+    <text class="selected-label">当前课程：</text>
+    <text class="selected-name">{{selectedCourse.name}}</text>
+    <text wx:if="{{selectedCourse.description}}" class="selected-desc">{{selectedCourse.description}}</text>
+  </view>
+
+  <!-- 课程列表 -->
+  <view class="course-list">
+    <text class="section-title">课程列表</text>
+    <view wx:if="{{courses.length === 0}}" class="empty-list">
+      <text>暂无课程</text>
+    </view>
+    <view wx:else class="list-container">
+      <view wx:for="{{courses}}" wx:key="id" class="course-item {{selectedCourse && selectedCourse.id === item.id ? 'selected' : ''}}" data-course-id="{{item.id}}" bindtap="selectCourse">
+        <view class="course-info">
+          <text class="course-name">{{item.name}}</text>
+          <text wx:if="{{item.description}}" class="course-desc">{{item.description}}</text>
+        </view>
+        <view class="course-actions">
+          <view class="select-btn">
+            <text>{{selectedCourse && selectedCourse.id === item.id ? '已选择' : '选择'}}</text>
+          </view>
+          <view class="delete-btn" data-course-id="{{item.id}}" catchtap="deleteCourse">
+            <text>删除</text>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+
+  <!-- 创建新课程 -->
+  <view class="create-section">
+    <text class="section-title">创建新课程</text>
+    <view class="form">
+      <input
+        class="input-field"
+        placeholder="课程名称"
+        value="{{newCourseName}}"
+        bindinput="onCourseNameInput"
+      />
+      <textarea
+        class="textarea-field"
+        placeholder="课程描述（可选）"
+        value="{{newCourseDescription}}"
+        bindinput="onCourseDescriptionInput"
+      />
+      <button
+        class="btn-create {{creating || isDisabled ? 'disabled' : ''}}"
+        bindtap="createCourse"
+        disabled="{{isDisabled || creating}}"
+        loading="{{creating}}"
+        hover-class="btn-hover"
+      >
+        {{creating ? '创建中...' : '创建课程'}}
+      </button>
+    </view>
+  </view>
+
+  <!-- 反馈信息 -->
+  <view wx:if="{{message}}" class="feedback-box">
+    <text>{{message}}</text>
+  </view>
+</view>
