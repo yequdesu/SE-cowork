@@ -2,25 +2,29 @@
    全局风格定义 
    ==================== */
    page {
-    /* 核心色板 (继承) */
+    /* 核心色板 */
     --primary: #3B82F6;
     --primary-dark: #2563EB;
     --primary-light: #EFF6FF;
+    
     --text-main: #111827;
-    --text-secondary: #6B7280;
+    --text-secondary: #4B5563;
     --text-tertiary: #9CA3AF;
+    
     --bg-page: #F3F4F6;
     --bg-card: #FFFFFF;
-  
-    /* 功能色 */
+    
+    /* 状态色 */
     --success: #10B981;
-    --success-light: #D1FAE5;
-    --warning: #F59E0B;
-    --warning-light: #FEF3C7;
+    --success-bg: #ECFDF5;
+    --danger: #EF4444;
+    --danger-bg: #FEF2F2;
     
     /* 阴影与圆角 */
+    --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
     --shadow-md: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
     --shadow-lg: 0 16rpx 48rpx rgba(59, 130, 246, 0.15);
+    
     --radius-md: 16rpx;
     --radius-lg: 24rpx;
     --radius-xl: 32rpx;
@@ -45,8 +49,8 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-bottom: 50rpx;
-    padding-top: 20rpx;
+    margin-bottom: 40rpx;
+    padding-top: 10rpx;
   }
   
   .title {
@@ -58,13 +62,12 @@
   }
   
   .subtitle {
-    font-size: 26rpx;
+    font-size: 24rpx;
     color: var(--text-tertiary);
     margin-top: 6rpx;
     display: block;
   }
   
-  /* 胶囊切换器 */
   .segment-control {
     background: #E5E7EB;
     padding: 6rpx;
@@ -74,7 +77,7 @@
   
   .segment-item {
     padding: 12rpx 32rpx;
-    font-size: 28rpx;
+    font-size: 26rpx;
     color: var(--text-secondary);
     border-radius: 16rpx;
     font-weight: 600;
@@ -84,20 +87,20 @@
   .segment-item.active {
     background: #fff;
     color: var(--text-main);
-    box-shadow: 0 4rpx 12rpx rgba(0,0,0,0.1);
+    box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.08);
   }
   
   /* ==================== 
      Hero Card (抽奖区) 
      ==================== */
   .hero-section {
-    margin-bottom: 60rpx;
+    margin-bottom: 50rpx;
   }
   
   .student-card {
     background: #fff;
     border-radius: var(--radius-xl);
-    height: 420rpx;
+    height: 400rpx;
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-lg);
@@ -106,21 +109,21 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s;
-    border: 2rpx solid #fff;
+    border: 2rpx solid rgba(255,255,255,0.5);
   }
   
-  /* 卡片背景装饰 */
-  .bg-circle {
+  /* 背景光斑 */
+  .bg-blob {
     position: absolute;
     border-radius: 50%;
-    filter: blur(60rpx);
-    opacity: 0.6;
+    filter: blur(50rpx);
+    opacity: 0.5;
     z-index: 0;
   }
-  .c-1 { width: 300rpx; height: 300rpx; background: #DBEAFE; top: -50rpx; right: -50rpx; }
-  .c-2 { width: 200rpx; height: 200rpx; background: #E0E7FF; bottom: -30rpx; left: -30rpx; }
+  .blob-1 { width: 260rpx; height: 260rpx; background: #DBEAFE; top: -40rpx; right: -40rpx; }
+  .blob-2 { width: 200rpx; height: 200rpx; background: #E0E7FF; bottom: -20rpx; left: -20rpx; }
   
-  /* --- 待机状态 --- */
+  /* 待机状态 */
   .state-empty {
     z-index: 1;
     display: flex;
@@ -128,7 +131,7 @@
     align-items: center;
   }
   
-  .empty-icon-box {
+  .empty-icon-wrapper {
     width: 120rpx;
     height: 120rpx;
     background: var(--bg-page);
@@ -136,12 +139,12 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 60rpx;
-    margin-bottom: 24rpx;
-    box-shadow: inset 0 0 20rpx rgba(0,0,0,0.05);
+    margin-bottom: 20rpx;
+    box-shadow: inset 0 0 20rpx rgba(0,0,0,0.03);
   }
   
-  .icon-pulse {
+  .icon-dice {
+    font-size: 60rpx;
     animation: pulse-emoji 2s infinite;
   }
   
@@ -150,7 +153,7 @@
     font-size: 28rpx;
   }
   
-  /* --- 结果状态 --- */
+  /* 结果状态 */
   .state-result {
     z-index: 1;
     display: flex;
@@ -160,11 +163,11 @@
   }
   
   .avatar-ring {
-    padding: 8rpx;
+    padding: 6rpx;
     background: linear-gradient(135deg, var(--primary), #60A5FA);
     border-radius: 50%;
     box-shadow: 0 10rpx 30rpx rgba(59, 130, 246, 0.3);
-    margin-bottom: 24rpx;
+    margin-bottom: 20rpx;
   }
   
   .avatar {
@@ -181,24 +184,21 @@
   }
   
   .result-name {
-    font-size: 64rpx;
+    font-size: 60rpx;
     font-weight: 800;
     color: var(--text-main);
-    line-height: 1.1;
     margin-bottom: 8rpx;
   }
   
   .result-id {
-    font-size: 28rpx;
+    font-size: 26rpx;
     color: var(--text-secondary);
-    background: rgba(255,255,255,0.6);
+    background: rgba(255,255,255,0.7);
     padding: 4rpx 16rpx;
     border-radius: 100rpx;
-    backdrop-filter: blur(4px);
   }
   
-  /* 结果闪光层 */
-  .shine-overlay {
+  .shine-effect {
     position: absolute;
     top: 0; left: 0; width: 100%; height: 100%;
     background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
@@ -212,14 +212,14 @@
   .btn-main {
     background: var(--primary);
     color: #fff;
-    height: 110rpx;
+    height: 100rpx;
     border-radius: 100rpx;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 36rpx;
+    font-size: 34rpx;
     font-weight: 700;
-    box-shadow: 0 12rpx 30rpx rgba(59, 130, 246, 0.4);
+    box-shadow: 0 10rpx 25rpx rgba(59, 130, 246, 0.4);
     border: none;
     position: relative;
     overflow: hidden;
@@ -227,16 +227,16 @@
   }
   
   .btn-main-hover {
-    transform: scale(0.96);
+    transform: scale(0.97);
     box-shadow: 0 6rpx 16rpx rgba(59, 130, 246, 0.3);
   }
   
-  .btn-icon { margin-right: 16rpx; }
+  .btn-icon { margin-right: 12rpx; font-size: 36rpx; }
   
-  .btn-shine {
+  .btn-glare {
     position: absolute;
     top: 0; left: -100%; width: 50%; height: 100%;
-    background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
     transform: skewX(-20deg);
     animation: shine 3s infinite;
   }
@@ -245,16 +245,16 @@
      Evaluation Panel 
      ==================== */
   .evaluation-panel {
-    margin-top: 50rpx;
+    margin-top: 40rpx;
     background: #fff;
     border-radius: var(--radius-lg);
-    padding: 32rpx;
     box-shadow: var(--shadow-md);
     opacity: 0.6;
     filter: grayscale(1);
     pointer-events: none;
-    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     transform: translateY(20rpx);
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    padding: 30rpx;
   }
   
   .evaluation-panel.is-visible {
@@ -264,110 +264,181 @@
     transform: translateY(0);
   }
   
-  .panel-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 30rpx;
-  }
-  
   .panel-title {
-    font-size: 30rpx;
+    font-size: 28rpx;
     font-weight: 700;
     color: var(--text-main);
+    margin-bottom: 24rpx;
+    display: block;
+    padding-left: 8rpx;
+    border-left: 6rpx solid var(--primary);
   }
   
   .panel-body {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 24rpx;
     margin-bottom: 30rpx;
   }
   
-  /* 标签 */
-  .tags-container {
+  /* 行样式 */
+  .control-row {
     display: flex;
-    gap: 20rpx;
+    flex-direction: column;
   }
   
-  .tag-chip {
+  .row-label {
+    font-size: 24rpx;
+    color: var(--text-secondary);
+    margin-bottom: 12rpx;
+    font-weight: 500;
+  }
+  
+  /* 1. 考勤 Toggle */
+  .tag-toggle {
     display: flex;
     align-items: center;
-    padding: 16rpx 24rpx;
+    padding: 20rpx 24rpx;
     background: #F3F4F6;
     border-radius: 16rpx;
     color: var(--text-secondary);
-    font-size: 26rpx;
+    font-size: 28rpx;
     font-weight: 500;
     transition: all 0.2s;
     border: 2rpx solid transparent;
   }
   
-  .chip-icon { margin-right: 8rpx; font-weight: bold; }
+  .toggle-icon {
+    width: 36rpx;
+    height: 36rpx;
+    border-radius: 50%;
+    border: 2rpx solid #D1D5DB;
+    margin-right: 16rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22rpx;
+    color: transparent;
+  }
   
-  .tag-chip.active-green {
-    background: var(--success-light);
+  .tag-toggle.active-green {
+    background: var(--success-bg);
     color: var(--success);
     border-color: var(--success);
   }
   
-  .tag-chip.active-orange {
-    background: var(--warning-light);
-    color: var(--warning);
-    border-color: var(--warning);
+  .tag-toggle.active-green .toggle-icon {
+    background: var(--success);
+    border-color: var(--success);
+    color: #fff;
   }
   
-  .chip-hover { transform: scale(0.95); }
-  
-  /* 评分框 */
-  .score-wrapper {
+  /* 2. 复述情况 Radio */
+  .radio-group {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
+    gap: 20rpx;
   }
   
-  .label { font-size: 22rpx; color: var(--text-tertiary); margin-bottom: 4rpx; }
+  .radio-chip {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20rpx 0;
+    background: #F3F4F6;
+    border-radius: 16rpx;
+    color: var(--text-secondary);
+    font-size: 26rpx;
+    font-weight: 500;
+    border: 2rpx solid transparent;
+    transition: all 0.2s;
+  }
   
-  .input-box {
+  .radio-icon { margin-right: 8rpx; font-weight: bold; }
+  
+  .radio-chip.active-green {
+    background: var(--success-bg);
+    color: var(--success);
+    border-color: var(--success);
+  }
+  
+  .radio-chip.active-red {
+    background: var(--danger-bg);
+    color: var(--danger);
+    border-color: var(--danger);
+  }
+  
+  /* 3. 评分行 */
+  .score-row {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    background: #F9FAFB;
+    padding: 20rpx;
+    border-radius: 16rpx;
+  }
+  
+  .score-row .row-label { margin-bottom: 0; }
+  
+  .input-wrapper {
     display: flex;
     align-items: baseline;
-    background: #F9FAFB;
-    padding: 10rpx 20rpx;
-    border-radius: 12rpx;
+    background: #fff;
+    padding: 6rpx 20rpx;
+    border-radius: 10rpx;
+    border: 2rpx solid #E5E7EB;
   }
   
   .score-input {
-    width: 60rpx;
-    font-size: 40rpx;
+    width: 80rpx;
+    font-size: 36rpx;
     font-weight: 700;
     color: var(--text-main);
     text-align: center;
     height: 50rpx;
   }
   
-  .suffix { font-size: 24rpx; color: var(--text-tertiary); margin-left: 4rpx; }
+  .unit { font-size: 24rpx; color: var(--text-tertiary); margin-left: 6rpx; }
   
-  /* 提交按钮 */
+  /* 底部 Footer */
+  .panel-footer {
+    border-top: 2rpx solid #F3F4F6;
+    padding-top: 24rpx;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .preview-bar {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .preview-label { font-size: 22rpx; color: var(--text-tertiary); }
+  .preview-val { font-size: 40rpx; font-weight: 800; color: var(--primary); }
+  
   .btn-submit {
-    background: #fff;
-    color: var(--text-main);
-    font-size: 30rpx;
+    margin: 0;
+    background: var(--text-main);
+    color: #fff;
+    font-size: 28rpx;
     font-weight: 600;
-    border: 2rpx solid #E5E7EB;
-    border-radius: 100rpx;
+    border-radius: 50rpx;
+    padding: 0 40rpx;
     height: 80rpx;
     display: flex;
     align-items: center;
     justify-content: center;
   }
   
-  .btn-sub-hover { background: #F9FAFB; }
+  .btn-sub-hover { opacity: 0.9; transform: scale(0.96); }
+  .chip-hover { transform: scale(0.98); opacity: 0.9; }
   
   /* ==================== 
-     Animation 
+     Animations 
      ==================== */
   @keyframes slideUp {
-    from { opacity: 0; transform: translateY(30rpx); }
+    from { opacity: 0; transform: translateY(20rpx); }
     to { opacity: 1; transform: translateY(0); }
   }
   @keyframes fadeIn {

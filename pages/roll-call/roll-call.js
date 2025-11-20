@@ -10,11 +10,12 @@ Page({
     sequentialIndex: 0,
     loading: false,
     updating: false,
-    scoreInput: '',
     message: '',
     arrived: false,
-    repeatedQuestion: false,
-    score: 0
+    recitationCorrect: null, // null, true, false
+    answerScore: '',
+    score: 0,
+    previewScore: 0 // 积分预览
   },
 
   onLoad: function() {
@@ -27,11 +28,12 @@ Page({
       sequentialIndex: 0,
       loading: false,
       updating: false,
-      scoreInput: '',
       message: '',
       arrived: false,
-      repeatedQuestion: false,
-      score: 0
+      recitationCorrect: null,
+      answerScore: '',
+      score: 0,
+      previewScore: 0
     });
     this.loadStudents();
   },
@@ -187,9 +189,10 @@ Page({
             console.log('[DEBUG] performRollCall: 点名成功，学生:', selectedStudent.name);
             that.setData({
               currentStudent: selectedStudent,
-              scoreInput: '',
               arrived: false,
-              repeatedQuestion: false,
+              recitationCorrect: null,
+              answerScore: '',
+              previewScore: 0,
               message: `点名成功：${selectedStudent.name}`
             });
           } else {
@@ -215,114 +218,39 @@ Page({
     });
   },
 
-  // 输入积分
-  onScoreInput: function(e) {
+  // 切换到达状态
+  toggleArrived: function() {
     this.setData({
-      scoreInput: e.detail.value
+      arrived: !this.data.arrived
     });
+    this.updatePreviewScore();
   },
 
-  // 更新积分
-  updateScore: function() {
-    console.log('[DEBUG] updateScore: 开始更新积分');
-    if (!this.data.currentStudent) {
-      console.log('[DEBUG] updateScore: 未选择学生');
-      wx.showToast({
-        title: '请先点名',
-        icon: 'none'
-      });
-      return;
-    }
-
-    const score = parseInt(this.data.scoreInput);
-    console.log('[DEBUG] updateScore: 输入积分:', this.data.scoreInput, '解析后:', score);
-    if (isNaN(score)) {
-      console.log('[DEBUG] updateScore: 积分无效');
-      wx.showToast({
-        title: '请输入有效积分',
-        icon: 'none'
-      });
-      return;
-    }
-
-    const that = this;
-    const selectedCourse = wx.getStorageSync('selectedCourse');
-    if (!selectedCourse) {
-      console.log('[DEBUG] updateScore: 未选择课程');
-      wx.showToast({
-        title: '请先选择课程',
-        icon: 'error'
-      });
-      return;
-    }
-    const course_id = selectedCourse.id;
-    console.log('[DEBUG] updateScore: 学生ID:', this.data.currentStudent.student_id, '积分:', score, '课程ID:', course_id);
+  // 设置复述问题正确性
+  setRecitationCorrect: function(e) {
+    const value = e.currentTarget.dataset.value === 'true';
     this.setData({
-      updating: true
+      recitationCorrect: value
     });
-
-    wx.request({
-      url: `${API_BASE_URL}/updateRollCall`,
-      method: 'POST',
-      data: {
-        studentId: this.data.currentStudent.student_id,
-        score: score,
-        course_id: course_id
-      },
-      success: function(res) {
-        console.log('[DEBUG] updateScore: API响应状态码:', res.statusCode);
-        console.log('[DEBUG] updateScore: API响应数据:', res.data);
-        that.setData({
-          updating: false
-        });
-        if (res.statusCode === 200 && res.data.success) {
-          console.log('[DEBUG] updateScore: 积分更新成功');
-          that.setData({
-            message: '积分更新成功'
-          });
-          wx.showToast({
-            title: '更新成功',
-            icon: 'success'
-          });
-          // 更新本地数据
-          const updatedStudents = that.data.students.map(student => {
-            if (student.student_id === that.data.currentStudent.student_id) {
-              return { ...student, total_score: score };
-            }
-            return student;
-          });
-          that.setData({
-            students: updatedStudents,
-            currentStudent: { ...that.data.currentStudent, total_score: score }
-          });
-        } else {
-          console.log('[DEBUG] updateScore: 更新失败，错误:', res.data.message);
-          that.setData({
-            message: '更新失败：' + (res.data.message || '未知错误')
-          });
-        }
-      },
-      fail: function(err) {
-        console.log('[DEBUG] updateScore: 网络错误:', err.errMsg);
-        that.setData({
-          updating: false,
-          message: '网络错误：' + err.errMsg
-        });
-      }
-    });
+    this.updatePreviewScore();
   },
 
-  // 到达课堂复选框变化
-  onArrivedChange: function(e) {
+  // 输入回答分数
+  onAnswerScoreInput: function(e) {
     this.setData({
-      arrived: e.detail.value
+      answerScore: e.detail.value
     });
+    this.updatePreviewScore();
   },
 
-  // 重复问题复选框变化
-  onRepeatedChange: function(e) {
+  // 更新积分预览
+  updatePreviewScore: function() {
+    const arrivedScore = this.data.arrived ? 1 : 0;
+    const recitationScore = this.data.recitationCorrect === true ? 0.5 : this.data.recitationCorrect === false ? -1 : 0;
+    const answerScore = parseFloat(this.data.answerScore) || 0;
+    const totalPreview = arrivedScore + recitationScore + answerScore;
     this.setData({
-      repeatedQuestion: e.detail.value
+      previewScore: totalPreview
     });
   },
 
@@ -336,14 +264,21 @@ Page({
       return;
     }
 
-    const score = parseInt(this.data.scoreInput);
-    if (isNaN(score)) {
+    // 计算积分
+    const arrivedScore = this.data.arrived ? 1 : 0;
+    const recitationScore = this.data.recitationCorrect === true ? 0.5 : this.data.recitationCorrect === false ? -1 : 0;
+    const answerScore = parseFloat(this.data.answerScore) || 0;
+
+    // 验证回答分数范围
+    if (answerScore < 0.5 || answerScore > 3) {
       wx.showToast({
-        title: '请输入有效分数',
+        title: '回答分数必须在0.5-3分之间',
         icon: 'none'
       });
       return;
     }
+
+    const totalScore = arrivedScore + recitationScore + answerScore;
 
     const that = this;
     const selectedCourse = wx.getStorageSync('selectedCourse');
@@ -364,7 +299,10 @@ Page({
       method: 'POST',
       data: {
         studentId: this.data.currentStudent.student_id,
-        score: score,
+        arrived: this.data.arrived,
+        recitationCorrect: this.data.recitationCorrect,
+        answerScore: answerScore,
+        totalScore: totalScore,
         course_id: course_id
       },
       success: function(res) {
@@ -382,13 +320,13 @@ Page({
           // 更新本地数据
           const updatedStudents = that.data.students.map(student => {
             if (student.student_id === that.data.currentStudent.student_id) {
-              return { ...student, total_score: score };
+              return { ...student, total_score: totalScore };
             }
             return student;
           });
           that.setData({
             students: updatedStudents,
-            currentStudent: { ...that.data.currentStudent, total_score: score }
+            currentStudent: { ...that.data.currentStudent, total_score: totalScore }
           });
         } else {
           that.setData({
