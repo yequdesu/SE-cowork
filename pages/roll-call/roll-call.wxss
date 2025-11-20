@@ -1,0 +1,271 @@
+/* 全局设置 */
+page {
+  background-color: #f7f8fa;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  --primary-blue: #005bea;
+  --primary-bg: #f0f5ff;
+  --success-green: #07c160;
+  --warning-orange: #ff9f00;
+  --text-main: #2c3e50;
+  --text-sub: #95a5a6;
+}
+
+.container {
+  padding: 40rpx;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+/* 头部与切换栏 */
+.header-section {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50rpx;
+}
+
+.page-title {
+  font-size: 40rpx;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+/* 分段控制器 (Segmented Control) */
+.tab-control {
+  display: flex;
+  background: #e4e7ed;
+  padding: 6rpx;
+  border-radius: 16rpx;
+}
+
+.tab-item {
+  padding: 12rpx 24rpx;
+  font-size: 26rpx;
+  color: #666;
+  border-radius: 12rpx;
+  transition: all 0.3s ease;
+}
+
+.tab-item.active {
+  background: #fff;
+  color: var(--text-main);
+  font-weight: 600;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+}
+
+/* 核心展示大卡片 */
+.hero-card {
+  background: #fff;
+  border-radius: 32rpx;
+  min-height: 340rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10rpx 40rpx rgba(0, 0, 0, 0.04);
+  margin-bottom: 50rpx;
+  position: relative;
+  overflow: hidden;
+}
+
+/* 装饰性背景圆 (可选) */
+.hero-card::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 400rpx;
+  height: 400rpx;
+  background: radial-gradient(circle, rgba(0,91,234,0.05) 0%, rgba(0,0,0,0) 70%);
+  border-radius: 50%;
+  z-index: 0;
+}
+
+/* 空状态 */
+.placeholder-icon {
+  font-size: 80rpx;
+  color: #eee;
+  font-weight: 700;
+  margin-bottom: 20rpx;
+}
+
+.placeholder-text {
+  font-size: 28rpx;
+  color: var(--text-sub);
+}
+
+/* 结果状态 */
+.result-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  animation: popIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.avatar-placeholder {
+  width: 100rpx;
+  height: 100rpx;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 44rpx;
+  font-weight: bold;
+  margin-bottom: 24rpx;
+  box-shadow: 0 8rpx 20rpx rgba(102, 126, 234, 0.3);
+}
+
+.student-name {
+  font-size: 56rpx;
+  font-weight: 800;
+  color: var(--text-main);
+  line-height: 1.2;
+}
+
+.student-id {
+  font-size: 26rpx;
+  color: var(--text-sub);
+  margin-top: 10rpx;
+  font-family: monospace;
+  background: #f0f2f5;
+  padding: 4rpx 12rpx;
+  border-radius: 8rpx;
+}
+
+/* 主操作按钮 */
+.btn-main {
+  background: linear-gradient(135deg, #005bea 0%, #00c6fb 100%);
+  color: #fff;
+  border-radius: 50rpx;
+  padding: 28rpx 0;
+  font-size: 34rpx;
+  font-weight: 600;
+  box-shadow: 0 12rpx 30rpx rgba(0, 91, 234, 0.25);
+  border: none;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.1s;
+}
+
+.btn-hover {
+  transform: scale(0.98);
+  opacity: 0.95;
+}
+
+.icon-dice {
+  margin-right: 16rpx;
+  font-size: 36rpx;
+}
+
+/* 评价面板 */
+.evaluation-panel {
+  margin-top: 60rpx;
+  background: #fff;
+  border-radius: 24rpx;
+  padding: 32rpx;
+  opacity: 0.5;
+  pointer-events: none;
+  transition: all 0.3s ease;
+}
+
+.evaluation-panel.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.panel-title {
+  font-size: 28rpx;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 30rpx;
+  display: block;
+}
+
+/* 标签选择行 */
+.tags-row {
+  display: flex;
+  gap: 24rpx;
+  margin-bottom: 40rpx;
+}
+
+.tag-item {
+  flex: 1;
+  height: 80rpx;
+  background: #f5f7fa;
+  border-radius: 16rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 28rpx;
+  color: #666;
+  font-weight: 500;
+  transition: all 0.2s;
+  border: 2rpx solid transparent;
+}
+
+/* 选中状态：到达 */
+.tag-item.active.success {
+  background: rgba(7, 193, 96, 0.1);
+  color: var(--success-green);
+  border-color: var(--success-green);
+  font-weight: 600;
+}
+
+/* 选中状态：重复 */
+.tag-item.active.warning {
+  background: rgba(255, 159, 0, 0.1);
+  color: var(--warning-orange);
+  border-color: var(--warning-orange);
+  font-weight: 600;
+}
+
+/* 分数输入行 */
+.input-group {
+  display: flex;
+  align-items: center;
+  background: #f9f9f9;
+  padding: 20rpx 30rpx;
+  border-radius: 16rpx;
+  margin-bottom: 30rpx;
+}
+
+.input-label {
+  font-size: 28rpx;
+  color: #666;
+  margin-right: 30rpx;
+}
+
+.score-input {
+  flex: 1;
+  font-size: 32rpx;
+  font-weight: 600;
+  color: var(--text-main);
+  height: 60rpx;
+}
+
+/* 次要提交按钮 */
+.btn-secondary {
+  background: #fff;
+  color: var(--text-main);
+  border: 2rpx solid #e0e0e0;
+  border-radius: 40rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+}
+
+.btn-secondary-hover {
+  background: #f5f5f5;
+}
+
+/* 动画关键帧 */
+@keyframes popIn {
+  0% { transform: scale(0.8); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}

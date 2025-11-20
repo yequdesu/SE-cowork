@@ -1,0 +1,91 @@
+<view class="container">
+  
+  <!-- 顶部栏：标题 + 刷新 -->
+  <view class="header-bar">
+    <text class="page-title">积分排行榜</text>
+    <view class="refresh-icon" bindtap="refreshData" hover-class="icon-hover">
+      <text class="icon-text">↻ 刷新</text>
+    </view>
+  </view>
+
+  <!-- 加载中 -->
+  <view wx:if="{{loading}}" class="loading-state">
+    <view class="spinner"></view>
+    <text>正在同步数据...</text>
+  </view>
+
+  <view wx:else class="content-body">
+    
+    <!-- 顶部前三名展示 (Podium) -->
+    <view class="top-three" wx:if="{{rankings.length >= 3}}">
+      <!-- 亚军 (左) -->
+      <view class="podium-item rank-2">
+        <view class="crown silver">2</view>
+        <view class="avatar">{{rankings[1].name[0]}}</view>
+        <text class="name">{{rankings[1].name}}</text>
+        <text class="score">{{rankings[1].score}}</text>
+      </view>
+      
+      <!-- 冠军 (中，最大) -->
+      <view class="podium-item rank-1">
+        <view class="crown gold">👑</view>
+        <view class="avatar main">{{rankings[0].name[0]}}</view>
+        <text class="name">{{rankings[0].name}}</text>
+        <text class="score main">{{rankings[0].score}}</text>
+      </view>
+      
+      <!-- 季军 (右) -->
+      <view class="podium-item rank-3">
+        <view class="crown bronze">3</view>
+        <view class="avatar">{{rankings[2].name[0]}}</view>
+        <text class="name">{{rankings[2].name}}</text>
+        <text class="score">{{rankings[2].score}}</text>
+      </view>
+    </view>
+
+    <!-- 统计图表 (改为横向滚动，防止拥挤) -->
+    <view class="section-card">
+      <text class="section-title">趋势分析</text>
+      <scroll-view scroll-x class="chart-scroll" enable-flex>
+        <view class="chart-wrapper">
+          <view wx:for="{{rankings}}" wx:key="studentId" class="bar-group">
+            <text class="bar-val">{{item.score}}</text>
+            <!-- 动态高度 + 渐变色 -->
+            <view class="bar" style="height: {{item.score * 4}}rpx; background: {{index < 3 ? 'var(--gradient-gold)' : 'var(--gradient-blue)'}}"></view>
+            <text class="bar-name">{{item.name}}</text>
+          </view>
+        </view>
+      </scroll-view>
+    </view>
+
+    <!-- 详细排名列表 -->
+    <view class="list-section">
+      <text class="section-title">详细名单</text>
+      <view class="list-header">
+        <text class="col-rank">排名</text>
+        <text class="col-name">学生信息</text>
+        <text class="col-data">点名 / 积分</text>
+      </view>
+
+      <view wx:for="{{rankings}}" wx:key="studentId" class="rank-card">
+        <!-- 排名徽章 -->
+        <view class="rank-badge {{index < 3 ? 'top-' + (index + 1) : ''}}">
+          {{index + 1}}
+        </view>
+        
+        <!-- 信息 -->
+        <view class="info-block">
+          <text class="student-name">{{item.name}}</text>
+          <text class="student-id">{{item.studentId}}</text>
+        </view>
+        
+        <!-- 数据 -->
+        <view class="data-block">
+          <text class="count-label">{{item.rollCallCount}}次</text>
+          <text class="score-val">{{item.score}}</text>
+        </view>
+      </view>
+    </view>
+
+  </view>
+</view>

@@ -1,0 +1,35 @@
+{
+  "pages": [
+    "pages/import/import",
+    "pages/roll-call/roll-call",
+    "pages/ranking/ranking",
+    "pages/settings/settings"
+  ],
+  "window": {
+    "navigationBarTitleText": "课堂点名系统"
+  },
+  "tabBar": {
+    "color": "#7A7E83",
+    "selectedColor": "#3cc51f",
+    "borderStyle": "black",
+    "backgroundColor": "#ffffff",
+    "list": [
+      {
+        "pagePath": "pages/import/import",
+        "text": "导入"
+      },
+      {
+        "pagePath": "pages/roll-call/roll-call",
+        "text": "点名"
+      },
+      {
+        "pagePath": "pages/ranking/ranking",
+        "text": "排名"
+      },
+      {
+        "pagePath": "pages/settings/settings",
+        "text": "管理"
+      }
+    ]
+  }
+}

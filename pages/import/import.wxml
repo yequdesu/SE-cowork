@@ -1,0 +1,53 @@
+<view class="container">
+  <!-- 头部引导 -->
+  <view class="header">
+    <text class="title">导入学生名单</text>
+    <text class="subtitle">支持 .xlsx, .xls 格式文件</text>
+  </view>
+
+  <!-- 核心操作区：未选择文件时显示上传引导，选择后显示文件卡片 -->
+  <view class="upload-zone {{selectedFile ? 'has-file' : ''}}" bindtap="{{!selectedFile ? 'chooseFile' : ''}}">
+    
+    <!-- 状态 A: 未选择文件 -->
+    <view wx:if="{{!selectedFile}}" class="empty-state">
+      <image class="upload-icon" src="/assets/excel-icon.png" mode="aspectFit" wx:if="{{false}}"></image> <!-- 如果有图标资源 -->
+      <view class="icon-placeholder">+</view> <!-- 无图标时的纯CSS替代 -->
+      <text class="upload-hint">点击选择 Excel 文件</text>
+    </view>
+
+    <!-- 状态 B: 已选择文件 -->
+    <view wx:else class="file-state">
+      <view class="file-info">
+        <view class="file-icon">xls</view>
+        <view class="file-detail">
+          <text class="file-name">{{selectedFile}}</text>
+          <text class="file-status">{{uploading ? '正在上传...' : '等待导入'}}</text>
+        </view>
+        <!-- 重选按钮 (阻止冒泡防止触发上传) -->
+        <view class="re-select" catchtap="chooseFile" wx:if="{{!uploading}}">重选</view>
+      </view>
+
+      <!-- 进度条 (内嵌在卡片中) -->
+      <view class="progress-wrap" wx:if="{{uploading}}">
+        <progress percent="{{progress}}" border-radius="10" activeColor="#4facfe" backgroundColor="#f0f2f5" stroke-width="6" />
+      </view>
+    </view>
+  </view>
+
+  <!-- 反馈信息区域 -->
+  <view wx:if="{{message}}" class="feedback-box {{messageType === 'error' ? 'error' : 'success'}}">
+    <text>{{message}}</text>
+  </view>
+
+  <!-- 底部操作按钮 -->
+  <view class="footer-action">
+    <button 
+      class="btn-submit {{uploading || !selectedFile ? 'disabled' : ''}}" 
+      bindtap="uploadAndImport" 
+      disabled="{{!selectedFile || uploading}}"
+      hover-class="btn-hover"
+    >
+      {{uploading ? '处理中...' : '开始导入'}}
+    </button>
+  </view>
+</view>

@@ -1,0 +1,196 @@
+/* 全局重置与变量 */
+page {
+  background-color: #f7f8fa; /* 现代浅灰背景 */
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", STHeiti, "Microsoft Yahei", Tahoma, Simsun, sans-serif;
+  --primary-color: #2c3e50;
+  --accent-color: #005bea; /* 科技蓝 */
+  --success-color: #07c160;
+  --text-main: #333;
+  --text-sub: #999;
+}
+
+.container {
+  padding: 60rpx 40rpx;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+/* 头部 */
+.header {
+  margin-bottom: 60rpx;
+}
+
+.title {
+  display: block;
+  font-size: 48rpx;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 16rpx;
+  letter-spacing: 1px;
+}
+
+.subtitle {
+  font-size: 28rpx;
+  color: var(--text-sub);
+}
+
+/* 上传区域 - 核心设计 */
+.upload-zone {
+  background: #fff;
+  border-radius: 32rpx;
+  padding: 60rpx 40rpx;
+  transition: all 0.3s ease;
+  /* 默认是虚线边框，引导点击 */
+  border: 4rpx dashed #e0e0e0; 
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 300rpx;
+  box-shadow: 0 10rpx 30rpx rgba(0, 0, 0, 0.02);
+}
+
+.upload-zone.has-file {
+  border: 4rpx solid transparent; /* 选中后变为实心卡片 */
+  background: #fff;
+  box-shadow: 0 20rpx 60rpx rgba(0, 0, 0, 0.08);
+  padding: 40rpx;
+}
+
+/* 空状态样式 */
+.icon-placeholder {
+  width: 100rpx;
+  height: 100rpx;
+  background: #f0f5ff;
+  color: var(--accent-color);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 60rpx;
+  font-weight: 300;
+  margin-bottom: 30rpx;
+}
+
+.upload-hint {
+  font-size: 30rpx;
+  color: #666;
+  font-weight: 500;
+}
+
+/* 文件选中状态样式 */
+.file-state {
+  width: 100%;
+}
+
+.file-info {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.file-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: #217346; /* Excel Green */
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 24rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  margin-right: 24rpx;
+  flex-shrink: 0;
+}
+
+.file-detail {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.file-name {
+  font-size: 30rpx;
+  color: var(--text-main);
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.file-status {
+  font-size: 24rpx;
+  color: var(--text-sub);
+  margin-top: 6rpx;
+}
+
+.re-select {
+  padding: 10rpx 20rpx;
+  background: #f0f2f5;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  color: #666;
+  margin-left: 20rpx;
+}
+
+/* 进度条容器 */
+.progress-wrap {
+  margin-top: 40rpx;
+  width: 100%;
+}
+
+/* 底部按钮 */
+.footer-action {
+  margin-top: auto; /* 自动推到底部 */
+  padding-top: 60rpx;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #005bea 0%, #00c6fb 100%);
+  color: #fff;
+  border-radius: 50rpx; /* 胶囊形状更现代 */
+  padding: 24rpx 0;
+  font-size: 32rpx;
+  font-weight: 600;
+  box-shadow: 0 10rpx 20rpx rgba(0, 91, 234, 0.2);
+  border: none;
+  transition: all 0.3s;
+}
+
+.btn-submit::after {
+  border: none;
+}
+
+.btn-submit.disabled {
+  background: #e0e0e0;
+  color: #fff;
+  box-shadow: none;
+}
+
+.btn-hover {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+/* 反馈消息 */
+.feedback-box {
+  margin-top: 40rpx;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  text-align: center;
+  animation: fadeIn 0.3s;
+}
+
+.feedback-box text {
+    color: #333;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10rpx); }
+  to { opacity: 1; transform: translateY(0); }
+}
