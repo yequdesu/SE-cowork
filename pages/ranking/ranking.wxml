@@ -16,8 +16,13 @@
       <text class="page-title">积分榜</text>
       <text class="page-subtitle">今天你拿分了吗</text>
     </view>
-    <view class="btn-refresh" bindtap="refreshData" hover-class="btn-hover">
-      <text class="icon-refresh {{loading ? 'spinning' : ''}}">↻</text>
+    <view class="header-buttons">
+      <view class="btn-export" bindtap="exportScores" hover-class="btn-hover">
+        <text class="icon-export {{exporting ? 'spinning' : ''}}">📊</text>
+      </view>
+      <view class="btn-refresh" bindtap="refreshData" hover-class="btn-hover">
+        <text class="icon-refresh {{loading ? 'spinning' : ''}}">↻</text>
+      </view>
     </view>
   </view>
 
@@ -112,7 +117,7 @@
           <view class="row-avatar">{{item.name[0]}}</view>
           <view class="info-text">
             <text class="student-name">{{item.name}}</text>
-            <text class="student-count">签到 {{item.rollCallCount}} 次</text>
+            <text class="student-count">点名 {{item.rollCallCount}} 次</text>
           </view>
         </view>
         

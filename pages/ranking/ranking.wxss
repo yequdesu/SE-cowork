@@ -48,6 +48,11 @@
     margin-bottom: 60rpx;
     padding-top: 20rpx;
   }
+
+  .header-buttons {
+    display: flex;
+    gap: 20rpx;
+  }
   
   .page-title {
     font-size: 56rpx;
@@ -65,7 +70,7 @@
     display: block;
   }
   
-  .btn-refresh {
+  .btn-export, .btn-refresh {
     width: 80rpx;
     height: 80rpx;
     background: #fff;
