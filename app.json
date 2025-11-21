@@ -8,7 +8,9 @@
     "pages/settings/settings"
   ],
   "window": {
-    "navigationBarTitleText": "课堂点名系统"
+    "navigationBarTitleText": "课堂点名系统",
+    "navigationBarBackgroundColor": "#ffffff",
+    "navigationBarTextStyle": "black"
   },
   "tabBar": {
     "color": "#7A7E83",

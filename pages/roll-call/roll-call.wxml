@@ -9,7 +9,6 @@
 
     <!-- 右侧控制区 -->
     <view class="header-controls">
-      <!-- 模式切换 -->
       <view class="segment-control">
         <view
           class="segment-item {{selectedMode === 'random' ? 'active' : ''}}"
@@ -23,7 +22,6 @@
         >顺序</view>
       </view>
 
-      <!-- 随机事件按钮 (样式已统一) -->
       <button class="btn-events" bindtap="goToEvents" hover-class="btn-hover">
         <text class="btn-events-icon">🎲</text>
         <text>随机事件</text>
@@ -38,6 +36,11 @@
       <!-- 背景装饰光斑 -->
       <view class="bg-blob blob-1"></view>
       <view class="bg-blob blob-2"></view>
+
+      <!-- 【修复】将连击显示改为右上角悬浮徽章，不占用垂直空间 -->
+      <view wx:if="{{combo > 1}}" class="combo-badge">
+        <text class="combo-text">🔥 Combo x{{combo}}</text>
+      </view>
 
       <!-- 状态 A: 待机中 -->
       <view wx:if="{{!currentStudent.name}}" class="state-empty">
@@ -56,11 +59,6 @@
         <text class="result-name">{{currentStudent.name}}</text>
         <text class="result-id">{{currentStudent.student_id}}</text>
         
-        <!-- 连击显示 -->
-        <view wx:if="{{combo > 1}}" class="combo-display">
-          <text class="combo-text">🔥 Combo x{{combo}}</text>
-        </view>
-
         <!-- 随机事件卡片 -->
         <view wx:if="{{randomEventInfo}}" class="event-display">
           <view class="event-content">
@@ -91,7 +89,7 @@
     </button>
   </view>
 
-  <!-- 评价表单 (选人后上浮显示) -->
+  <!-- 评价表单 -->
   <view class="evaluation-panel {{currentStudent.name ? 'is-visible' : ''}} slide-up" style="animation-delay: 0.3s;">
     <view class="panel-header">
       <text class="panel-title">课堂表现记录</text>
@@ -111,11 +109,10 @@
         </view>
       </view>
 
-      <!-- 第二行：复述情况 (单选) -->
+      <!-- 第二行：复述情况 -->
       <view wx:if="{{arrived}}" class="control-row fade-in">
         <text class="row-label">复述问题</text>
         <view class="radio-group">
-          <!-- 【修复】data-value 使用 {{}} 传递布尔值 -->
           <view
             class="radio-chip {{recitationCorrect === true ? 'active-green' : ''}}"
             bindtap="setRecitationCorrect"
@@ -125,7 +122,6 @@
             <text class="radio-icon">{{recitationCorrect === true ? '✓' : ''}}</text>
             <text>回答正确</text>
           </view>
-          
           <view
             class="radio-chip {{recitationCorrect === false ? 'active-red' : ''}}"
             bindtap="setRecitationCorrect"
@@ -137,7 +133,6 @@
           </view>
         </view>
         
-        <!-- 免扣分事件提示 -->
         <view wx:if="{{recitationCorrect === false && randomEventInfo.name === '免扣分'}}" class="exemption-notice fade-in">
           <text>🛡️ 触发免扣分保护，本次不扣分</text>
         </view>
@@ -157,7 +152,6 @@
           />
           <text class="unit">分</text>
           
-          <!-- 动态分数标签 -->
           <view wx:if="{{recitationCorrect === true && totalMultiplier > 1}}" class="modifier-tag multiplier">
             <text>×{{totalMultiplier}}</text>
           </view>
@@ -175,7 +169,6 @@
         <text class="preview-val">{{previewScore || '0.0'}}</text>
       </view>
 
-      <!-- 【修复】未到达时禁用按钮 -->
       <button 
         class="btn-submit {{!arrived ? 'disabled' : ''}}" 
         hover-class="btn-sub-hover" 

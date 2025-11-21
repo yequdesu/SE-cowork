@@ -69,7 +69,6 @@
     display: block;
   }
   
-  /* 右侧控制区布局 */
   .header-controls {
     display: flex;
     flex-direction: column;
@@ -99,19 +98,18 @@
     box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.08);
   }
   
-  /* 【修复】随机事件按钮样式统一 */
   .btn-events {
-    background: #fff; /* 与 segment-control 激活态保持一致的白底 */
+    background: #fff;
     color: var(--text-secondary);
     height: 56rpx;
-    border-radius: 16rpx; /* 圆角统一 */
+    border-radius: 16rpx;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24rpx;
     font-weight: 600;
     box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
-    border: 2rpx solid #E5E7EB; /* 增加边框以匹配质感 */
+    border: 2rpx solid #E5E7EB;
     padding: 0 24rpx;
     margin: 0;
   }
@@ -235,21 +233,24 @@
     margin-bottom: 16rpx;
   }
   
-  /* 连击显示 */
-  .combo-display {
-    margin-bottom: 16rpx;
+  /* 【修复】连击显示 - 改为绝对定位的徽章 */
+  .combo-badge {
+    position: absolute;
+    top: 24rpx;
+    right: 24rpx;
+    z-index: 10;
     animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
   }
   
   .combo-text {
-    font-size: 24rpx;
+    font-size: 22rpx;
     color: #F59E0B;
     font-weight: 700;
     background: #FFFBEB;
     border: 2rpx solid #FCD34D;
-    padding: 6rpx 16rpx;
+    padding: 4rpx 14rpx;
     border-radius: 30rpx;
-    display: inline-block;
+    box-shadow: 0 4rpx 10rpx rgba(245, 158, 11, 0.1);
   }
   
   /* 随机事件卡片 */
@@ -395,8 +396,8 @@
     font-weight: 500;
   }
   
-  /* 1. 考勤 Toggle */
-  .tag-toggle {
+  /* Toggle & Radio Chips */
+  .tag-toggle, .radio-chip {
     display: flex;
     align-items: center;
     padding: 20rpx 24rpx;
@@ -427,34 +428,22 @@
     color: var(--success);
     border-color: var(--success);
   }
-  
   .tag-toggle.active-green .toggle-icon {
     background: var(--success);
     border-color: var(--success);
     color: #fff;
   }
   
-  /* 2. 复述情况 Radio */
   .radio-group {
     display: flex;
     gap: 20rpx;
   }
-  
   .radio-chip {
     flex: 1;
-    display: flex;
-    align-items: center;
     justify-content: center;
     padding: 20rpx 0;
-    background: #F3F4F6;
-    border-radius: 16rpx;
-    color: var(--text-secondary);
     font-size: 26rpx;
-    font-weight: 500;
-    border: 2rpx solid transparent;
-    transition: all 0.2s;
   }
-  
   .radio-icon { margin-right: 8rpx; font-weight: bold; }
   
   .radio-chip.active-green {
@@ -462,14 +451,12 @@
     color: var(--success);
     border-color: var(--success);
   }
-  
   .radio-chip.active-red {
     background: var(--danger-bg);
     color: var(--danger);
     border-color: var(--danger);
   }
   
-  /* 免扣分提示 */
   .exemption-notice {
     margin-top: 16rpx;
     background: #F0FDF4;
@@ -482,7 +469,7 @@
     text-align: center;
   }
   
-  /* 3. 评分行 */
+  /* Score Input */
   .score-row {
     flex-direction: row;
     align-items: center;
@@ -491,7 +478,6 @@
     padding: 20rpx;
     border-radius: 16rpx;
   }
-  
   .score-row .row-label { margin-bottom: 0; }
   
   .input-wrapper {
@@ -511,10 +497,8 @@
     text-align: center;
     height: 50rpx;
   }
-  
   .unit { font-size: 24rpx; color: var(--text-tertiary); margin-left: 4rpx; margin-right: 10rpx; }
   
-  /* 动态分数标签 (Multiplier & Bonus) */
   .modifier-tag {
     font-size: 22rpx;
     font-weight: 700;
@@ -523,20 +507,10 @@
     margin-left: 6rpx;
     line-height: 1;
   }
+  .modifier-tag.multiplier { background: #EFF6FF; color: var(--primary); border: 1rpx solid #BFDBFE; }
+  .modifier-tag.bonus { background: #ECFDF5; color: var(--success); border: 1rpx solid #A7F3D0; }
   
-  .modifier-tag.multiplier {
-    background: #EFF6FF;
-    color: var(--primary);
-    border: 1rpx solid #BFDBFE;
-  }
-  
-  .modifier-tag.bonus {
-    background: #ECFDF5;
-    color: var(--success);
-    border: 1rpx solid #A7F3D0;
-  }
-  
-  /* 底部 Footer */
+  /* Footer */
   .panel-footer {
     border-top: 2rpx solid #F3F4F6;
     padding-top: 24rpx;
@@ -544,12 +518,7 @@
     justify-content: space-between;
     align-items: center;
   }
-  
-  .preview-bar {
-    display: flex;
-    flex-direction: column;
-  }
-  
+  .preview-bar { display: flex; flex-direction: column; }
   .preview-label { font-size: 22rpx; color: var(--text-tertiary); }
   .preview-val { font-size: 40rpx; font-weight: 800; color: var(--primary); }
   
@@ -567,55 +536,25 @@
     justify-content: center;
     transition: all 0.2s;
   }
-  
-  /* 【修复】提交按钮禁用样式 */
   .btn-submit.disabled {
     background: #E5E7EB;
     color: #9CA3AF;
     box-shadow: none;
-    pointer-events: none; /* 禁止点击 */
+    pointer-events: none;
   }
   
   .btn-sub-hover { opacity: 0.9; transform: scale(0.96); }
   .chip-hover { transform: scale(0.98); opacity: 0.9; }
   
-  /* ==================== 
-     Animations 
-     ==================== */
-  @keyframes slideUp {
-    from { opacity: 0; transform: translateY(20rpx); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes popIn {
-    0% { transform: scale(0.8); opacity: 0; }
-    70% { transform: scale(1.05); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes pulse-emoji {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.2); }
-  }
-  @keyframes shine {
-    0% { left: -100%; }
-    20% { left: 200%; }
-    100% { left: 200%; }
-  }
-  @keyframes flash {
-    0% { opacity: 1; }
-    100% { opacity: 0; }
-  }
-  @keyframes event-appear {
-    0% { opacity: 0; transform: translateY(10rpx) scale(0.95); }
-    100% { opacity: 1; transform: translateY(0) scale(1); }
-  }
-  @keyframes icon-bounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-4rpx); }
-  }
+  /* Animations */
+  @keyframes slideUp { from { opacity: 0; transform: translateY(20rpx); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes popIn { 0% { transform: scale(0.8); opacity: 0; } 70% { transform: scale(1.05); } 100% { transform: scale(1); opacity: 1; } }
+  @keyframes pulse-emoji { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+  @keyframes shine { 0% { left: -100%; } 20% { left: 200%; } 100% { left: 200%; } }
+  @keyframes flash { 0% { opacity: 1; } 100% { opacity: 0; } }
+  @keyframes event-appear { 0% { opacity: 0; transform: translateY(10rpx) scale(0.95); } 100% { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes icon-bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4rpx); } }
   
   .slide-up { opacity: 0; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
   .fade-in { animation: fadeIn 0.8s ease forwards; }
