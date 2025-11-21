@@ -3,6 +3,7 @@
     "pages/import/import",
     "pages/course-select/course-select",
     "pages/roll-call/roll-call",
+    "pages/events/events",
     "pages/ranking/ranking",
     "pages/settings/settings"
   ],

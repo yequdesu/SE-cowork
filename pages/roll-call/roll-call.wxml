@@ -6,18 +6,28 @@
       <text class="title">课堂点名</text>
       <text class="subtitle">随机抽取 • 公平记录</text>
     </view>
-    
-    <view class="segment-control">
-      <view
-        class="segment-item {{selectedMode === 'random' ? 'active' : ''}}"
-        bindtap="selectMode"
-        data-mode="random"
-      >随机</view>
-      <view
-        class="segment-item {{selectedMode === 'sequential' ? 'active' : ''}}"
-        bindtap="selectMode"
-        data-mode="sequential"
-      >顺序</view>
+
+    <!-- 右侧控制区 -->
+    <view class="header-controls">
+      <!-- 模式切换 -->
+      <view class="segment-control">
+        <view
+          class="segment-item {{selectedMode === 'random' ? 'active' : ''}}"
+          bindtap="selectMode"
+          data-mode="random"
+        >随机</view>
+        <view
+          class="segment-item {{selectedMode === 'sequential' ? 'active' : ''}}"
+          bindtap="selectMode"
+          data-mode="sequential"
+        >顺序</view>
+      </view>
+
+      <!-- 随机事件按钮 (样式已统一) -->
+      <button class="btn-events" bindtap="goToEvents" hover-class="btn-hover">
+        <text class="btn-events-icon">🎲</text>
+        <text>随机事件</text>
+      </button>
     </view>
   </view>
 
@@ -42,8 +52,27 @@
         <view class="avatar-ring">
           <view class="avatar">{{currentStudent.name[0]}}</view>
         </view>
+        
         <text class="result-name">{{currentStudent.name}}</text>
         <text class="result-id">{{currentStudent.student_id}}</text>
+        
+        <!-- 连击显示 -->
+        <view wx:if="{{combo > 1}}" class="combo-display">
+          <text class="combo-text">🔥 Combo x{{combo}}</text>
+        </view>
+
+        <!-- 随机事件卡片 -->
+        <view wx:if="{{randomEventInfo}}" class="event-display">
+          <view class="event-content">
+            <view class="event-header">
+              <text class="event-icon">{{randomEventInfo.icon}}</text>
+              <text class="event-name">{{randomEventInfo.name}}</text>
+              <text wx:if="{{randomEventInfo.bonusScore > 0}}" class="event-bonus">+{{randomEventInfo.bonusScore}}</text>
+            </view>
+            <text class="event-description">{{randomEventInfo.description}}</text>
+          </view>
+        </view>
+
         <view class="shine-effect"></view>
       </view>
     </view>
@@ -83,32 +112,39 @@
       </view>
 
       <!-- 第二行：复述情况 (单选) -->
-      <view class="control-row">
+      <view wx:if="{{arrived}}" class="control-row fade-in">
         <text class="row-label">复述问题</text>
         <view class="radio-group">
+          <!-- 【修复】data-value 使用 {{}} 传递布尔值 -->
           <view
             class="radio-chip {{recitationCorrect === true ? 'active-green' : ''}}"
             bindtap="setRecitationCorrect"
-            data-value="true"
+            data-value="{{true}}"
             hover-class="chip-hover"
           >
             <text class="radio-icon">{{recitationCorrect === true ? '✓' : ''}}</text>
             <text>回答正确</text>
           </view>
+          
           <view
             class="radio-chip {{recitationCorrect === false ? 'active-red' : ''}}"
             bindtap="setRecitationCorrect"
-            data-value="false"
+            data-value="{{false}}"
             hover-class="chip-hover"
           >
             <text class="radio-icon">{{recitationCorrect === false ? '✕' : ''}}</text>
             <text>回答错误</text>
           </view>
         </view>
+        
+        <!-- 免扣分事件提示 -->
+        <view wx:if="{{recitationCorrect === false && randomEventInfo.name === '免扣分'}}" class="exemption-notice fade-in">
+          <text>🛡️ 触发免扣分保护，本次不扣分</text>
+        </view>
       </view>
 
       <!-- 第三行：分数输入 -->
-      <view class="control-row score-row">
+      <view wx:if="{{arrived}}" class="control-row score-row fade-in">
         <text class="row-label">评分 (0.5 - 3.0)</text>
         <view class="input-wrapper">
           <input
@@ -120,18 +156,32 @@
             confirm-type="done"
           />
           <text class="unit">分</text>
+          
+          <!-- 动态分数标签 -->
+          <view wx:if="{{recitationCorrect === true && totalMultiplier > 1}}" class="modifier-tag multiplier">
+            <text>×{{totalMultiplier}}</text>
+          </view>
+          <view wx:if="{{recitationCorrect === true && bonusScore > 0}}" class="modifier-tag bonus">
+            <text>+{{bonusScore}}</text>
+          </view>
         </view>
       </view>
     </view>
 
     <!-- 底部：预览与提交 -->
     <view class="panel-footer">
-      <view class="preview-bar">
+      <view wx:if="{{arrived}}" class="preview-bar">
         <text class="preview-label">预计积分</text>
         <text class="preview-val">{{previewScore || '0.0'}}</text>
       </view>
-      
-      <button class="btn-submit" hover-class="btn-sub-hover" bindtap="submitUpdate">
+
+      <!-- 【修复】未到达时禁用按钮 -->
+      <button 
+        class="btn-submit {{!arrived ? 'disabled' : ''}}" 
+        hover-class="btn-sub-hover" 
+        bindtap="submitUpdate"
+        disabled="{{!arrived}}"
+      >
         确认记录
       </button>
     </view>

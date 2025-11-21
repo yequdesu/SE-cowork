@@ -1,0 +1,89 @@
+<view class="container">
+
+<!-- 顶部标题 -->
+<view class="header fade-in">
+  <text class="title">随机事件库</text>
+  <text class="subtitle">配置点名过程中可能触发的彩蛋</text>
+</view>
+
+<!-- 全局开关卡片 -->
+<view class="control-section slide-up" style="animation-delay: 0.1s;">
+  <view class="switch-card">
+    <view class="switch-info">
+      <text class="card-title">启用随机事件</text>
+      <text class="card-desc">开启后，点名时将有概率触发特殊效果</text>
+    </view>
+    <switch
+      class="custom-switch"
+      checked="{{randomEventsEnabled}}"
+      bindchange="toggleRandomEvents"
+      color="#3B82F6"
+    />
+  </view>
+</view>
+
+<!-- 事件列表区域 (开关关闭时整体变灰) -->
+<view class="events-container {{!randomEventsEnabled ? 'state-disabled' : ''}} slide-up" style="animation-delay: 0.2s;">
+  <view class="section-header">
+    <text class="section-title">事件类型预览</text>
+    <view class="prob-hint">
+      <text class="hint-icon">ℹ️</text>
+      <text>综合触发率约 60%</text>
+    </view>
+  </view>
+
+  <!-- 事件 1: 免扣分 -->
+  <view class="event-card">
+    <view class="icon-box theme-green">
+      <text>🛡️</text>
+    </view>
+    <view class="content-box">
+      <view class="content-top">
+        <text class="event-name">免扣分护盾</text>
+        <view class="prob-badge green">
+          <text>20% 概率</text>
+        </view>
+      </view>
+      <text class="event-detail">回答错误时抵消惩罚，保留基础分。</text>
+    </view>
+  </view>
+
+  <!-- 事件 2: 额外加分 -->
+  <view class="event-card">
+    <view class="icon-box theme-orange">
+      <text>⭐</text>
+    </view>
+    <view class="content-box">
+      <view class="content-top">
+        <text class="event-name">幸运加分</text>
+        <view class="prob-badge orange">
+          <text>30% 概率</text>
+        </view>
+      </view>
+      <text class="event-detail">本次点名直接获得额外 1-2 分奖励。</text>
+    </view>
+  </view>
+
+  <!-- 事件 3: 幸运加倍 -->
+  <view class="event-card">
+    <view class="icon-box theme-purple">
+      <text>🎯</text>
+    </view>
+    <view class="content-box">
+      <view class="content-top">
+        <text class="event-name">欧气翻倍</text>
+        <view class="prob-badge purple">
+          <text>10% 概率</text>
+        </view>
+      </view>
+      <text class="event-detail">本次评分直接 x2，最高可得双倍积分。</text>
+    </view>
+  </view>
+</view>
+
+<!-- 底部说明 -->
+<view class="footer fade-in">
+  <text class="footer-text">随机事件仅在“随机模式”下生效，顺序模式不触发</text>
+</view>
+
+</view>

@@ -1,0 +1,240 @@
+/* ==================== 
+   全局风格定义 
+   ==================== */
+   page {
+    /* 核心色板 */
+    --primary: #3B82F6;
+    --text-main: #111827;
+    --text-secondary: #6B7280;
+    --text-tertiary: #9CA3AF;
+    
+    --bg-page: #F3F4F6;
+    --bg-card: #FFFFFF;
+    
+    /* 事件主题色 */
+    --green-bg: #ECFDF5;
+    --green-text: #059669;
+    --orange-bg: #FFFBEB;
+    --orange-text: #D97706;
+    --purple-bg: #F5F3FF;
+    --purple-text: #7C3AED;
+  
+    /* 阴影与圆角 */
+    --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
+    
+    --radius-lg: 24rpx;
+    --radius-xl: 32rpx;
+  
+    background-color: var(--bg-page);
+    font-family: -apple-system, "PingFang SC", "Helvetica Neue", sans-serif;
+    box-sizing: border-box;
+    padding-bottom: 60rpx;
+  }
+  
+  .container {
+    padding: 40rpx;
+    min-height: 100vh;
+  }
+  
+  /* ==================== 
+     Header 
+     ==================== */
+  .header {
+    text-align: center;
+    margin-bottom: 60rpx;
+    padding-top: 20rpx;
+  }
+  
+  .title {
+    font-size: 48rpx;
+    font-weight: 800;
+    color: var(--text-main);
+    display: block;
+    margin-bottom: 12rpx;
+    letter-spacing: -1rpx;
+  }
+  
+  .subtitle {
+    font-size: 26rpx;
+    color: var(--text-secondary);
+  }
+  
+  /* ==================== 
+     Switch Card 
+     ==================== */
+  .control-section {
+    margin-bottom: 60rpx;
+  }
+  
+  .switch-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-xl);
+    padding: 40rpx;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border: 2rpx solid rgba(255,255,255,0.6);
+  }
+  
+  .switch-info {
+    flex: 1;
+    padding-right: 30rpx;
+  }
+  
+  .card-title {
+    font-size: 32rpx;
+    font-weight: 700;
+    color: var(--text-main);
+    display: block;
+    margin-bottom: 8rpx;
+  }
+  
+  .card-desc {
+    font-size: 24rpx;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  
+  /* 调整 Switch 大小 (部分机型生效) */
+  .custom-switch {
+    transform: scale(0.9);
+  }
+  
+  /* ==================== 
+     Events List 
+     ==================== */
+  .events-container {
+    transition: all 0.4s ease;
+  }
+  
+  /* 禁用状态样式：变灰、半透明 */
+  .state-disabled {
+    opacity: 0.5;
+    filter: grayscale(1);
+    pointer-events: none; /* 禁止点击 */
+  }
+  
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30rpx;
+    padding: 0 10rpx;
+  }
+  
+  .section-title {
+    font-size: 30rpx;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  
+  .prob-hint {
+    display: flex;
+    align-items: center;
+    font-size: 24rpx;
+    color: var(--text-tertiary);
+    background: rgba(0,0,0,0.03);
+    padding: 6rpx 16rpx;
+    border-radius: 100rpx;
+  }
+  
+  .hint-icon { margin-right: 8rpx; font-size: 24rpx; }
+  
+  /* 事件卡片 */
+  .event-card {
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    padding: 32rpx;
+    margin-bottom: 24rpx;
+    box-shadow: var(--shadow-sm);
+    display: flex;
+    align-items: flex-start;
+    transition: transform 0.2s;
+  }
+  
+  .event-card:active {
+    transform: scale(0.99);
+  }
+  
+  /* 图标盒子 */
+  .icon-box {
+    width: 88rpx;
+    height: 88rpx;
+    border-radius: 24rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40rpx;
+    margin-right: 24rpx;
+    flex-shrink: 0;
+  }
+  
+  .theme-green { background: var(--green-bg); }
+  .theme-orange { background: var(--orange-bg); }
+  .theme-purple { background: var(--purple-bg); }
+  
+  .content-box {
+    flex: 1;
+  }
+  
+  .content-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8rpx;
+  }
+  
+  .event-name {
+    font-size: 30rpx;
+    font-weight: 700;
+    color: var(--text-main);
+  }
+  
+  /* 概率徽章 */
+  .prob-badge {
+    padding: 4rpx 12rpx;
+    border-radius: 8rpx;
+    font-size: 20rpx;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+  }
+  
+  .prob-badge.green { background: var(--green-bg); color: var(--green-text); }
+  .prob-badge.orange { background: var(--orange-bg); color: var(--orange-text); }
+  .prob-badge.purple { background: var(--purple-bg); color: var(--purple-text); }
+  
+  .event-detail {
+    font-size: 26rpx;
+    color: var(--text-secondary);
+    line-height: 1.4;
+  }
+  
+  /* ==================== 
+     Footer 
+     ==================== */
+  .footer {
+    text-align: center;
+    padding-top: 40rpx;
+  }
+  
+  .footer-text {
+    font-size: 24rpx;
+    color: var(--text-tertiary);
+  }
+  
+  /* ==================== 
+     Animation 
+     ==================== */
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(20rpx); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  .slide-up { opacity: 0; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+  .fade-in { animation: fadeIn 0.8s ease forwards; }

@@ -19,6 +19,7 @@
     --success-bg: #ECFDF5;
     --danger: #EF4444;
     --danger-bg: #FEF2F2;
+    --warning: #F59E0B;
     
     /* 阴影与圆角 */
     --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
@@ -43,12 +44,12 @@
   }
   
   /* ==================== 
-     Header & Tabs 
+     Header & Controls 
      ==================== */
   .header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
+    align-items: flex-start;
     margin-bottom: 40rpx;
     padding-top: 10rpx;
   }
@@ -68,6 +69,14 @@
     display: block;
   }
   
+  /* 右侧控制区布局 */
+  .header-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 20rpx;
+  }
+  
   .segment-control {
     background: #E5E7EB;
     padding: 6rpx;
@@ -76,8 +85,8 @@
   }
   
   .segment-item {
-    padding: 12rpx 32rpx;
-    font-size: 26rpx;
+    padding: 10rpx 28rpx;
+    font-size: 24rpx;
     color: var(--text-secondary);
     border-radius: 16rpx;
     font-weight: 600;
@@ -90,6 +99,30 @@
     box-shadow: 0 4rpx 10rpx rgba(0,0,0,0.08);
   }
   
+  /* 【修复】随机事件按钮样式统一 */
+  .btn-events {
+    background: #fff; /* 与 segment-control 激活态保持一致的白底 */
+    color: var(--text-secondary);
+    height: 56rpx;
+    border-radius: 16rpx; /* 圆角统一 */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24rpx;
+    font-weight: 600;
+    box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.05);
+    border: 2rpx solid #E5E7EB; /* 增加边框以匹配质感 */
+    padding: 0 24rpx;
+    margin: 0;
+  }
+  
+  .btn-events-icon {
+    margin-right: 8rpx;
+    font-size: 24rpx;
+  }
+  
+  .btn-hover { transform: scale(0.96); opacity: 0.9; }
+  
   /* ==================== 
      Hero Card (抽奖区) 
      ==================== */
@@ -100,7 +133,7 @@
   .student-card {
     background: #fff;
     border-radius: var(--radius-xl);
-    height: 400rpx;
+    min-height: 420rpx; 
     position: relative;
     overflow: hidden;
     box-shadow: var(--shadow-lg);
@@ -110,6 +143,7 @@
     justify-content: center;
     transition: all 0.3s;
     border: 2rpx solid rgba(255,255,255,0.5);
+    padding: 40rpx 0;
   }
   
   /* 背景光斑 */
@@ -159,6 +193,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 100%;
     animation: popIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
   
@@ -167,27 +202,28 @@
     background: linear-gradient(135deg, var(--primary), #60A5FA);
     border-radius: 50%;
     box-shadow: 0 10rpx 30rpx rgba(59, 130, 246, 0.3);
-    margin-bottom: 20rpx;
+    margin-bottom: 16rpx;
   }
   
   .avatar {
-    width: 120rpx;
-    height: 120rpx;
+    width: 110rpx;
+    height: 110rpx;
     background: #fff;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 50rpx;
+    font-size: 48rpx;
     font-weight: 800;
     color: var(--primary);
   }
   
   .result-name {
-    font-size: 60rpx;
+    font-size: 56rpx;
     font-weight: 800;
     color: var(--text-main);
     margin-bottom: 8rpx;
+    line-height: 1.1;
   }
   
   .result-id {
@@ -196,6 +232,71 @@
     background: rgba(255,255,255,0.7);
     padding: 4rpx 16rpx;
     border-radius: 100rpx;
+    margin-bottom: 16rpx;
+  }
+  
+  /* 连击显示 */
+  .combo-display {
+    margin-bottom: 16rpx;
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  }
+  
+  .combo-text {
+    font-size: 24rpx;
+    color: #F59E0B;
+    font-weight: 700;
+    background: #FFFBEB;
+    border: 2rpx solid #FCD34D;
+    padding: 6rpx 16rpx;
+    border-radius: 30rpx;
+    display: inline-block;
+  }
+  
+  /* 随机事件卡片 */
+  .event-display {
+    width: 85%;
+    background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+    border: 2rpx solid rgba(16, 185, 129, 0.3);
+    border-radius: 20rpx;
+    padding: 20rpx;
+    margin-top: 10rpx;
+    animation: event-appear 0.5s ease-out;
+    box-shadow: 0 8rpx 20rpx rgba(16, 185, 129, 0.1);
+  }
+  
+  .event-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8rpx;
+  }
+  
+  .event-icon {
+    font-size: 32rpx;
+    margin-right: 10rpx;
+    animation: icon-bounce 0.8s ease infinite alternate;
+  }
+  
+  .event-name {
+    font-size: 28rpx;
+    font-weight: 700;
+    color: #059669;
+    flex: 1;
+  }
+  
+  .event-bonus {
+    font-size: 22rpx;
+    font-weight: 700;
+    color: #059669;
+    background: rgba(255,255,255,0.6);
+    padding: 2rpx 10rpx;
+    border-radius: 8rpx;
+  }
+  
+  .event-description {
+    font-size: 24rpx;
+    color: #4B5563;
+    line-height: 1.4;
+    display: block;
   }
   
   .shine-effect {
@@ -368,6 +469,19 @@
     border-color: var(--danger);
   }
   
+  /* 免扣分提示 */
+  .exemption-notice {
+    margin-top: 16rpx;
+    background: #F0FDF4;
+    border: 2rpx solid #BBF7D0;
+    border-radius: 12rpx;
+    padding: 16rpx;
+    font-size: 24rpx;
+    color: #15803D;
+    font-weight: 500;
+    text-align: center;
+  }
+  
   /* 3. 评分行 */
   .score-row {
     flex-direction: row;
@@ -382,23 +496,45 @@
   
   .input-wrapper {
     display: flex;
-    align-items: baseline;
+    align-items: center;
     background: #fff;
-    padding: 6rpx 20rpx;
+    padding: 6rpx 16rpx;
     border-radius: 10rpx;
     border: 2rpx solid #E5E7EB;
   }
   
   .score-input {
-    width: 80rpx;
-    font-size: 36rpx;
+    width: 70rpx;
+    font-size: 32rpx;
     font-weight: 700;
     color: var(--text-main);
     text-align: center;
     height: 50rpx;
   }
   
-  .unit { font-size: 24rpx; color: var(--text-tertiary); margin-left: 6rpx; }
+  .unit { font-size: 24rpx; color: var(--text-tertiary); margin-left: 4rpx; margin-right: 10rpx; }
+  
+  /* 动态分数标签 (Multiplier & Bonus) */
+  .modifier-tag {
+    font-size: 22rpx;
+    font-weight: 700;
+    padding: 4rpx 8rpx;
+    border-radius: 8rpx;
+    margin-left: 6rpx;
+    line-height: 1;
+  }
+  
+  .modifier-tag.multiplier {
+    background: #EFF6FF;
+    color: var(--primary);
+    border: 1rpx solid #BFDBFE;
+  }
+  
+  .modifier-tag.bonus {
+    background: #ECFDF5;
+    color: var(--success);
+    border: 1rpx solid #A7F3D0;
+  }
   
   /* 底部 Footer */
   .panel-footer {
@@ -429,6 +565,15 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: all 0.2s;
+  }
+  
+  /* 【修复】提交按钮禁用样式 */
+  .btn-submit.disabled {
+    background: #E5E7EB;
+    color: #9CA3AF;
+    box-shadow: none;
+    pointer-events: none; /* 禁止点击 */
   }
   
   .btn-sub-hover { opacity: 0.9; transform: scale(0.96); }
@@ -462,6 +607,14 @@
   @keyframes flash {
     0% { opacity: 1; }
     100% { opacity: 0; }
+  }
+  @keyframes event-appear {
+    0% { opacity: 0; transform: translateY(10rpx) scale(0.95); }
+    100% { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  @keyframes icon-bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-4rpx); }
   }
   
   .slide-up { opacity: 0; animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
