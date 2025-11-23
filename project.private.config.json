@@ -1,0 +1,6 @@
+{
+  "libVersion": "3.11.2",
+  "setting": {
+    "compileHotReLoad": true
+  }
+}

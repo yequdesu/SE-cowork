@@ -1,5 +1,5 @@
 // pages/import/import.js
-const API_BASE_URL = 'http://localhost:3001/api';
+const API_BASE_URL = 'https://localhost:3000/api';
 
 Page({
   data: {

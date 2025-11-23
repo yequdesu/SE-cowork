@@ -1,21 +1,27 @@
 const xlsx = require('xlsx');
 
-// 示例学生数据
-const students = [
-    { 学号: '2021001', 姓名: '张三', 专业: '计算机科学' },
-    { 学号: '2021002', 姓名: '李四', 专业: '信息工程' },
-    { 学号: '2021003', 姓名: '王五', 专业: '软件工程' },
-    { 学号: '2021004', 姓名: '赵六', 专业: '计算机科学' },
-    { 学号: '2021005', 姓名: '孙七', 专业: '信息工程' },
-    { 学号: '2021006', 姓名: '周八', 专业: '软件工程' },
-    { 学号: '2021007', 姓名: '吴九', 专业: '计算机科学' },
-    { 学号: '2021008', 姓名: '郑十', 专业: '信息工程' },
-    { 学号: '2021009', 姓名: '王十一', 专业: '软件工程' },
-    { 学号: '2021010', 姓名: '陈十二', 专业: '计算机科学' },
-    { 学号: '2021011', 姓名: '林十三', 专业: '信息工程' },
-    { 学号: '2021012', 姓名: '黄十四', 专业: '软件工程' },
-    { 学号: '2021013', 姓名: '徐十五', 专业: '计算机科学' }
-];
+// 生成随机中文姓名
+const surnames = ['张', '李', '王', '赵', '孙', '周', '吴', '郑', '陈', '林', '黄', '徐', '朱', '马', '胡', '郭', '何', '高', '梁', '罗'];
+const givenNames = ['三', '四', '五', '六', '七', '八', '九', '十', '十一', '十二', '十三', '十四', '十五', '十六', '十七', '十八', '十九', '二十', '二十一', '二十二', '二十三', '二十四', '二十五', '二十六', '二十七', '二十八', '二十九', '三十', '一', '二'];
+
+function generateRandomName() {
+    const surname = surnames[Math.floor(Math.random() * surnames.length)];
+    const givenName = givenNames[Math.floor(Math.random() * givenNames.length)];
+    return surname + givenName;
+}
+
+// 专业列表
+const majors = ['计算机科学', '信息工程', '软件工程'];
+
+// 生成50个学生记录
+const students = [];
+for (let i = 0; i < 50; i++) {
+    students.push({
+        student_id: '2021' + String(1 + i).padStart(3, '0'),
+        name: generateRandomName(),
+        major: majors[i % 3]
+    });
+}
 
 // 创建工作簿
 const workbook = xlsx.utils.book_new();
@@ -27,6 +33,6 @@ const worksheet = xlsx.utils.json_to_sheet(students);
 xlsx.utils.book_append_sheet(workbook, worksheet, '学生名单');
 
 // 写入文件
-xlsx.writeFile(workbook, 'test_students.xlsx');
+xlsx.writeFile(workbook, 'test-stus.xlsx');
 
-console.log('test_students.xlsx 文件已创建');
+console.log('test-stus.xlsx 文件已创建');

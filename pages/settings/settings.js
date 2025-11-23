@@ -36,7 +36,7 @@ Page({
     const course_id = selectedCourse.id;
     this.setData({ loading: true });
     wx.request({
-      url: `http://localhost:3001/api/students?course_id=${course_id}`,
+      url: `https://localhost:3000/api/students?course_id=${course_id}`,
       method: 'GET',
       success: (res) => {
         if (res.data.success) {
@@ -152,8 +152,8 @@ Page({
     }
     const course_id = selectedCourse.id;
     const url = isEditing
-      ? `http://localhost:3001/api/students/${currentStudent.student_id}?course_id=${course_id}`
-      : `http://localhost:3001/api/students?course_id=${course_id}`;
+      ? `https://localhost:3000/api/students/${currentStudent.student_id}?course_id=${course_id}`
+      : `https://localhost:3000/api/students?course_id=${course_id}`;
     const method = isEditing ? 'PUT' : 'POST';
 
     // 编辑时只发送name和major，添加时发送所有字段
@@ -208,7 +208,7 @@ Page({
       success: (res) => {
         if (res.confirm) {
           wx.request({
-            url: `http://localhost:3001/api/students/${studentId}?course_id=${course_id}`,
+            url: `https://localhost:3000/api/students/${studentId}?course_id=${course_id}`,
             method: 'DELETE',
             success: (res) => {
               if (res.data.success) {
@@ -293,7 +293,7 @@ Page({
           const promises = this.data.selectedStudents.map(id =>
             new Promise((resolve, reject) => {
               wx.request({
-                url: `http://localhost:3001/api/students/${id}?course_id=${course_id}`,
+                url: `https://localhost:3000/api/students/${id}?course_id=${course_id}`,
                 method: 'DELETE',
                 success: resolve,
                 fail: reject

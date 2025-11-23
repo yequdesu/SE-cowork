@@ -2,28 +2,25 @@
    全局风格定义 (Design System) 
    ==================== */
    page {
-    /* 核心色板 */
-    --primary: #3B82F6;         /* 现代科技蓝 */
-    --primary-dark: #2563EB;    /* 深蓝 hover态 */
-    --primary-light: #EFF6FF;   /* 浅蓝 背景态 */
+    --primary: #3B82F6;         
+    --primary-dark: #2563EB;    
+    --primary-light: #EFF6FF;   
     
-    --text-main: #111827;       /* 深灰黑色 */
-    --text-secondary: #6B7280;  /* 次级灰 */
-    --text-tertiary: #9CA3AF;   /* 辅助灰 */
+    --text-main: #111827;       
+    --text-secondary: #6B7280;  
+    --text-tertiary: #9CA3AF;   
     
-    --bg-page: #F3F4F6;         /* 页面底色 */
-    --bg-card: #FFFFFF;         /* 卡片背景 */
-    --bg-input: #F9FAFB;        /* 输入框背景 */
+    --bg-page: #F3F4F6;         
+    --bg-card: #FFFFFF;         
+    --bg-input: #F9FAFB;        
     
-    --danger: #EF4444;          /* 警告/删除 */
-    --success: #10B981;         /* 成功 */
+    --danger: #EF4444;          
+    --success: #10B981;         
   
-    /* 阴影体系 */
     --shadow-sm: 0 2rpx 8rpx rgba(0, 0, 0, 0.04);
     --shadow-md: 0 8rpx 24rpx rgba(0, 0, 0, 0.06);
-    --shadow-lg: 0 16rpx 48rpx rgba(59, 130, 246, 0.15); /* 带颜色的辉光 */
+    --shadow-lg: 0 16rpx 48rpx rgba(59, 130, 246, 0.15); 
   
-    /* 圆角 */
     --radius-md: 16rpx;
     --radius-lg: 24rpx;
     --radius-xl: 32rpx;
@@ -82,7 +79,6 @@
     overflow: hidden;
   }
   
-  /* 玻璃拟态光泽纹理 */
   .current-card::after {
     content: '';
     position: absolute;
@@ -168,7 +164,6 @@
     gap: 24rpx;
   }
   
-  /* 课程卡片项 */
   .course-card {
     background: var(--bg-card);
     border-radius: var(--radius-lg);
@@ -182,14 +177,12 @@
     position: relative;
   }
   
-  /* 选中态 */
   .course-card.is-active {
     border-color: var(--primary);
     background-color: var(--primary-light);
     box-shadow: var(--shadow-md);
   }
   
-  /* 点击态 */
   .card-hover {
     transform: scale(0.98);
     background-color: #F9FAFB;
@@ -218,7 +211,6 @@
     overflow: hidden;
   }
   
-  /* 操作区 */
   .course-actions {
     display: flex;
     align-items: center;
@@ -238,7 +230,6 @@
     font-size: 28rpx;
   }
   
-  /* 删除按钮微交互 */
   .btn-icon-delete {
     width: 64rpx;
     height: 64rpx;
@@ -254,7 +245,7 @@
   .cross-icon {
     font-size: 40rpx;
     line-height: 1;
-    margin-top: -4rpx; /* 视觉修正 */
+    margin-top: -4rpx; 
   }
   
   .icon-hover {
@@ -263,7 +254,6 @@
     transform: rotate(90deg);
   }
   
-  /* 空状态 */
   .empty-state {
     text-align: center;
     padding: 80rpx 0;
@@ -298,6 +288,9 @@
     color: var(--text-main);
     transition: all 0.3s;
     border: 2rpx solid transparent;
+    
+    /* 【修改点2】显式添加 box-sizing 防止 padding 撑破容器 */
+    box-sizing: border-box;
   }
   
   .modern-textarea {
@@ -310,6 +303,8 @@
     color: var(--text-main);
     transition: all 0.3s;
     border: 2rpx solid transparent;
+    
+    /* 建议此处也加上 box-sizing 以防万一 */
     box-sizing: border-box;
   }
   
@@ -324,7 +319,6 @@
     color: var(--text-tertiary);
   }
   
-  /* 主按钮 */
   .btn-primary {
     background: var(--primary);
     color: #fff;
@@ -355,7 +349,6 @@
     box-shadow: 0 6rpx 20rpx rgba(59, 130, 246, 0.2);
   }
   
-  /* 按钮光泽动画 */
   .btn-shine {
     position: absolute;
     top: 0;
@@ -394,14 +387,13 @@
   
   .slide-up {
     animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    opacity: 0; /* 初始隐藏 */
+    opacity: 0; 
   }
   
   .fade-in {
     animation: fadeIn 0.8s ease forwards;
   }
   
-  /* Toast */
   .toast-message {
     position: fixed;
     bottom: 60rpx;

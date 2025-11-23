@@ -5,7 +5,6 @@
       <text class="title">课程选择</text>
       <text class="subtitle">管理您的学习计划与课程安排</text>
     </view>
-    <!-- 装饰性元素（可选，如不需要可删） -->
     <view class="header-decoration"></view>
   </view>
 
@@ -47,11 +46,9 @@
         </view>
         
         <view class="course-actions">
-          <!-- 选中状态指示器 -->
           <view class="check-indicator" wx:if="{{selectedCourse && selectedCourse.id === item.id}}">
             <text class="check-icon">✓</text> 已选
           </view>
-          <!-- 删除按钮 -->
           <view class="btn-icon-delete" data-course-id="{{item.id}}" catchtap="deleteCourse" hover-class="icon-hover">
             <text class="cross-icon">×</text>
           </view>
@@ -62,7 +59,11 @@
 
   <!-- 创建新课程 -->
   <view class="section slide-up" style="animation-delay: 0.3s;">
-    <text class="section-title">新建课程</text>
+    <!-- 【修改点1】增加了 section-header 包裹，修复间距太近的问题 -->
+    <view class="section-header">
+      <text class="section-title">新建课程</text>
+    </view>
+    
     <view class="form-card">
       <view class="input-group">
         <input

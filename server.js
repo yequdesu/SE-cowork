@@ -24,9 +24,14 @@ app.get('/health', (req, res) => {
   res.json({ status: 'OK', message: 'Server is running' });
 });
 
-// 启动服务器
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+const https = require("https");
+const fs = require("fs");
+
+https.createServer({
+    key: fs.readFileSync("./key.pem"),
+    cert: fs.readFileSync("./cert.pem")
+}, app).listen(3000, () => {
+    console.log("HTTPS server running at https://localhost:3000");
 });
 
 module.exports = app;
